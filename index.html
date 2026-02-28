@@ -1,0 +1,1416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Mani Finance</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Serif:wght@600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js">
+// ── MOBILE SIDE DRAWER ──
+function openDrawer(){
+  const ov=document.getElementById('mobDrawerOv');
+  const dr=document.getElementById('mobDrawer');
+  const du=document.getElementById('drawerUser');
+  if(du&&CU)du.textContent=CU.name+' · '+CU.role;
+  ov.style.display='block';
+}
+document.addEventListener('DOMContentLoaded',function(){
+  const ov=document.getElementById('mobDrawerOv');
+  if(ov){
+    ov.addEventListener('click',function(e){
+      const dr=document.getElementById('mobDrawer');
+      if(dr&&!dr.contains(e.target)){closeDrawer();}
+    });
+  }
+});
+function closeDrawer(){
+  document.getElementById('mobDrawerOv').style.display='none';
+}
+function goD(pg){
+  closeDrawer();
+  document.querySelectorAll('.sdi').forEach(el=>el.classList.remove('active'));
+  const d=document.getElementById('sd-'+pg);if(d)d.classList.add('active');
+  go(pg);
+}
+</script>
+<style>
+:root{
+  --g1:#1B5E20;--g2:#2E7D32;--g3:#388E3C;--g4:#4CAF50;
+  --gl:#C8E6C9;--gp:#E8F5E9;--gr:#F1F8E9;
+  --y1:#F9A825;--y2:#FDD835;--yp:#FFFDE7;
+  --r1:#C62828;--rp:#FFEBEE;
+  --b1:#1565C0;--bp:#E3F2FD;
+  --bg:#F4F5EF;--bg2:#FFFFFF;--bg3:#FAFAF7;
+  --txt:#1B3A1C;--txt2:#4A6B4C;--txt3:#7A9E7C;--txt4:#B8D4BA;
+  --bdr:#C8E6C9;--bdr2:#A5D6A7;
+  --shadow:0 2px 8px rgba(27,94,32,0.08);
+  --shadow2:0 4px 24px rgba(27,94,32,0.13);
+  --r:10px;--r2:6px;--sb:222px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--txt);font-size:14px;line-height:1.5;}
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-track{background:var(--gp);}
+::-webkit-scrollbar-thumb{background:var(--gl);border-radius:3px;}
+::selection{background:var(--gl);color:var(--g1);}
+
+/* ── LOGIN ── */
+#loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--g1) 0%,var(--g2) 60%,#43A047 100%);}
+.lc{width:360px;background:#fff;border-radius:20px;padding:40px 36px;box-shadow:0 24px 60px rgba(0,0,0,0.2);}
+.lc-brand{text-align:center;margin-bottom:32px;}
+.lc-icon{width:60px;height:60px;background:linear-gradient(135deg,var(--g1),var(--g3));border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 14px;box-shadow:0 4px 16px rgba(27,94,32,0.3);}
+.lc-brand h1{font-family:'IBM Plex Serif',serif;font-size:22px;color:var(--g1);}
+.lc-brand p{font-size:10px;color:var(--txt3);letter-spacing:2px;text-transform:uppercase;margin-top:3px;}
+.lbl{display:block;font-size:10px;font-weight:600;color:var(--txt2);text-transform:uppercase;letter-spacing:.8px;margin-bottom:5px;}
+.inp{width:100%;background:var(--gp);border:1.5px solid var(--bdr);border-radius:8px;padding:11px 13px;color:var(--txt);font-size:14px;font-family:inherit;outline:none;transition:border-color .2s;margin-bottom:14px;}
+.inp:focus{border-color:var(--g2);background:#fff;}
+.inp::placeholder{color:var(--txt4);}
+.btn-login{width:100%;background:linear-gradient(135deg,var(--g1),var(--g3));color:#fff;font-weight:700;font-size:14px;border:none;border-radius:8px;padding:13px;cursor:pointer;font-family:inherit;transition:filter .2s;}
+.btn-login:hover{filter:brightness(1.08);}
+.lerr{color:var(--r1);font-size:12px;text-align:center;margin-top:10px;min-height:18px;}
+
+/* ── LAYOUT ── */
+#app{display:none;height:100vh;overflow:hidden;}
+.aw{display:flex;height:100%;}
+
+/* ── SIDEBAR ── */
+.sb{width:var(--sb);background:var(--g1);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto;}
+.sb-top{padding:16px 13px 10px;}
+.sb-brand{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:9px;background:rgba(255,255,255,.09);margin-bottom:9px;}
+.sb-bi{width:34px;height:34px;background:var(--y2);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+.sb-bt h2{font-family:'IBM Plex Serif',serif;font-size:14px;color:#fff;}
+.sb-bt p{font-size:8px;color:rgba(255,255,255,.45);letter-spacing:1.5px;text-transform:uppercase;}
+.sb-usr{margin:0 13px 9px;background:rgba(255,255,255,.09);border-radius:8px;padding:9px 11px;display:flex;align-items:center;gap:8px;}
+.sb-av{width:30px;height:30px;border-radius:50%;background:var(--y2);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--g1);flex-shrink:0;}
+.sb-un{font-size:12px;font-weight:600;color:#fff;}
+.sb-ur{font-size:9px;color:rgba(255,255,255,.45);}
+.sb-nav{padding:5px 9px;flex:1;}
+.ng{font-size:8px;font-weight:700;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:1.5px;padding:11px 8px 3px;}
+.ni{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:7px;cursor:pointer;font-size:12px;font-weight:500;color:rgba(255,255,255,.6);margin-bottom:1px;transition:all .15s;user-select:none;position:relative;}
+.ni:hover{background:rgba(255,255,255,.1);color:#fff;}
+.ni.active{background:rgba(255,255,255,.16);color:#fff;font-weight:600;}
+.ni.active::before{content:'';position:absolute;left:0;width:3px;height:22px;background:var(--y2);border-radius:0 3px 3px 0;}
+.ni svg{width:13px;height:13px;flex-shrink:0;opacity:.7;}
+.ni.active svg{opacity:1;}
+.sb-bot{padding:11px 13px;border-top:1px solid rgba(255,255,255,.1);margin-top:auto;}
+.btn-out{width:100%;background:transparent;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.55);border-radius:7px;padding:8px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s;}
+.btn-out:hover{background:var(--r1);border-color:var(--r1);color:#fff;}
+
+/* ── MAIN WRAP ── */
+.mw{flex:1;overflow-y:auto;background:var(--bg);}
+.main{padding:22px 26px;max-width:1440px;}
+
+/* ── MOBILE ── */
+.mob-hdr{display:none;position:fixed;top:0;left:0;right:0;background:var(--g1);z-index:600;padding:10px 15px;align-items:center;justify-content:space-between;}
+.mob-brand{font-family:'IBM Plex Serif',serif;font-size:15px;color:#fff;display:flex;align-items:center;gap:7px;}
+.mob-bi{width:27px;height:27px;background:var(--y2);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;}
+.mob-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--g1);border-top:1px solid rgba(255,255,255,.1);z-index:600;padding:5px 0 10px;gap:0;}
+.mi{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:5px 2px;cursor:pointer;font-size:7px;font-weight:600;color:rgba(255,255,255,.45);transition:color .15s;text-transform:uppercase;letter-spacing:.4px;}
+.mi.active{color:var(--y2);}
+.mi svg{width:16px;height:16px;}
+/* MOBILE DRAWER */
+.mob-drawer-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:400;}
+.mob-drawer-ov.open{display:block;}
+.mob-drawer{position:fixed;bottom:0;left:0;right:0;background:var(--g1);border-radius:18px 18px 0 0;z-index:401;padding:10px 0 32px;transform:translateY(100%);transition:transform .28s cubic-bezier(.4,0,.2,1);}
+.mob-drawer-ov.open .mob-drawer{transform:translateY(0);}
+.mob-drawer-handle{width:36px;height:4px;background:rgba(255,255,255,.25);border-radius:2px;margin:0 auto 14px;}
+.mob-drawer-title{font-size:10px;font-weight:700;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:1.5px;padding:0 18px 8px;}
+.mob-drawer-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;padding:0 10px;}
+.mdg-item{display:flex;flex-direction:column;align-items:center;gap:5px;padding:12px 6px;border-radius:10px;cursor:pointer;font-size:9px;font-weight:600;color:rgba(255,255,255,.65);text-transform:uppercase;letter-spacing:.4px;text-align:center;transition:background .15s;}
+.mdg-item:hover,.mdg-item:active{background:rgba(255,255,255,.12);}
+.mdg-item.active{color:var(--y2);}
+.mdg-item svg{width:20px;height:20px;opacity:.8;}
+.mdg-item.active svg{opacity:1;}
+.mob-drawer-sep{height:1px;background:rgba(255,255,255,.1);margin:10px 18px;}
+.mob-signout{display:flex;align-items:center;justify-content:center;gap:7px;margin:10px 18px 0;padding:11px;background:rgba(255,255,255,.08);border-radius:9px;cursor:pointer;font-size:12px;font-weight:600;color:rgba(255,255,255,.6);}
+.mob-signout:hover{background:var(--r1);color:#fff;}
+
+/* ── PAGES ── */
+.page{display:none;animation:fU .22s ease both;}
+.page.active{display:block;}
+@keyframes fU{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+.ph{margin-bottom:18px;display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:9px;}
+.ph-l h2{font-family:'IBM Plex Serif',serif;font-size:20px;color:var(--g1);}
+.ph-l p{font-size:11px;color:var(--txt3);margin-top:1px;}
+.ph-r{display:flex;gap:7px;align-items:center;flex-wrap:wrap;}
+
+/* ── STAT CARDS ── */
+.sc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:9px;margin-bottom:14px;}
+.sc{background:#fff;border:1px solid var(--bdr);border-radius:var(--r);padding:13px 15px;border-top:3px solid var(--g2);}
+.sc-lbl{font-size:9px;font-weight:700;color:var(--txt3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:5px;}
+.sc-val{font-size:18px;font-weight:700;color:var(--txt);letter-spacing:-.3px;}
+.sc-val.g{color:var(--g1);}
+.sc-val.r{color:var(--r1);}
+.sc-val.y{color:var(--y1);}
+.sc-val.gr{color:var(--g2);}
+.sc-sub{font-size:9px;color:var(--txt3);margin-top:2px;}
+
+/* ── ACCOUNT HERO ── */
+.ah{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px;}
+.ahc{background:#fff;border:1px solid var(--bdr);border-radius:var(--r);padding:15px 17px;border-left:4px solid var(--g2);}
+.ahc-lbl{font-size:9px;font-weight:700;color:var(--txt3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px;}
+.ahc-val{font-size:21px;font-weight:700;color:var(--g1);letter-spacing:-.4px;}
+.ahc-sub{font-size:9px;color:var(--txt3);margin-top:2px;}
+
+/* ── DASHBOARD BLOCKS ── */
+.db-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px;}
+.db{background:#fff;border:1px solid var(--bdr);border-radius:var(--r);overflow:hidden;}
+.db-hd{background:var(--gp);padding:9px 13px;border-bottom:1px solid var(--bdr);display:flex;align-items:center;gap:5px;}
+.db-hd h3{font-size:12px;font-weight:700;color:var(--g1);}
+.db-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.db-row{display:flex;justify-content:space-between;align-items:center;padding:7px 13px;border-bottom:1px solid var(--gr);}
+.db-row:last-child{border-bottom:none;}
+.db-row .k{font-size:11px;color:var(--txt2);}
+.db-row .v{font-size:12px;font-weight:700;color:var(--txt);}
+.db-row .v.g{color:var(--g1);}
+.db-row .v.gr{color:var(--g2);}
+.db-row .v.r{color:var(--r1);}
+.db-row .v.y{color:var(--y1);}
+.db-div{height:1px;background:var(--bdr);margin:3px 13px;}
+
+/* ── TABLES ── */
+.tc{background:#fff;border:1px solid var(--bdr);border-radius:var(--r);overflow:hidden;margin-bottom:13px;}
+.tc-hd{padding:11px 15px;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid var(--g2);flex-wrap:wrap;gap:7px;background:var(--gp);}
+.tc-hd h3{font-size:12px;font-weight:700;color:var(--g1);}
+.tw{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:11.5px;}
+thead th{background:var(--gr);padding:7px 11px;text-align:left;font-size:9px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.6px;white-space:nowrap;border-bottom:1px solid var(--bdr);}
+tbody td{padding:8px 11px;border-bottom:1px solid var(--gr);color:var(--txt);vertical-align:middle;}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr:hover td{background:var(--gp);}
+.badge{display:inline-flex;align-items:center;padding:2px 7px;border-radius:20px;font-size:9px;font-weight:700;letter-spacing:.3px;}
+.bo{background:var(--bp);color:var(--b1);}
+.bc{background:var(--gr);color:var(--txt3);}
+.bi{background:var(--gp);color:var(--g2);}
+.bx{background:var(--rp);color:var(--r1);}
+.nd{text-align:center;padding:34px;color:var(--txt3);font-size:12px;}
+
+/* ── BUTTONS ── */
+.btn{padding:7px 13px;border-radius:7px;font-size:11.5px;font-weight:600;cursor:pointer;font-family:inherit;border:none;transition:all .15s;display:inline-flex;align-items:center;gap:5px;white-space:nowrap;}
+.btn:active{transform:scale(.97);}
+.btn-g{background:var(--g1);color:#fff;}
+.btn-g:hover{background:var(--g2);}
+.btn-gh{background:var(--gp);color:var(--g1);border:1px solid var(--bdr);}
+.btn-gh:hover{background:var(--gl);}
+.btn-y{background:var(--y1);color:#fff;}
+.btn-r{background:var(--rp);color:var(--r1);}
+.btn-r:hover{background:var(--r1);color:#fff;}
+.btn-b{background:var(--bp);color:var(--b1);}
+.btn-b:hover{background:var(--b1);color:#fff;}
+.btn-sm{padding:4px 8px;font-size:10px;border-radius:5px;}
+.sinp{background:var(--gp);border:1.5px solid var(--bdr);border-radius:7px;padding:7px 10px;color:var(--txt);font-size:11.5px;font-family:inherit;outline:none;transition:border-color .2s;width:155px;}
+.sinp:focus{border-color:var(--g2);}
+.sinp::placeholder{color:var(--txt4);}
+.dinp{background:var(--gp);border:1.5px solid var(--bdr);border-radius:7px;padding:7px 10px;color:var(--txt);font-size:11.5px;font-family:inherit;outline:none;transition:border-color .2s;}
+.dinp:focus{border-color:var(--g2);}
+
+/* ── MODAL ── */
+.ov{display:none;position:fixed;inset:0;background:rgba(27,94,32,.3);z-index:300;align-items:center;justify-content:center;padding:12px;backdrop-filter:blur(3px);}
+.ov.open{display:flex;}
+.modal{background:#fff;border:1px solid var(--bdr);border-radius:16px;padding:24px;width:560px;max-width:100%;max-height:92vh;overflow-y:auto;box-shadow:var(--shadow2);}
+.modal-lg{width:800px;}
+.mt{font-family:'IBM Plex Serif',serif;font-size:17px;color:var(--g1);margin-bottom:18px;display:flex;align-items:center;gap:7px;}
+.fg{display:flex;flex-direction:column;gap:4px;}
+.fg label{font-size:9px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.7px;}
+.fg input,.fg select{background:var(--gp);border:1.5px solid var(--bdr);border-radius:7px;padding:8px 10px;color:var(--txt);font-size:12.5px;font-family:inherit;outline:none;transition:border-color .2s;}
+.fg input:focus,.fg select:focus{border-color:var(--g2);background:#fff;}
+.fg select option{background:#fff;}
+.fg input::placeholder{color:var(--txt4);}
+.fg2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
+.fg3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px;}
+.fg1{display:grid;grid-template-columns:1fr;gap:10px;margin-bottom:10px;}
+.mf{display:flex;gap:8px;justify-content:flex-end;margin-top:16px;padding-top:13px;border-top:1px solid var(--bdr);}
+
+/* ── SPLIT BOX ── */
+.spb{background:var(--gr);border:1.5px solid var(--bdr);border-radius:9px;padding:12px;margin-top:7px;}
+.sp-t{font-size:9px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.9px;margin-bottom:9px;}
+.sp-row{display:grid;grid-template-columns:140px 1fr;align-items:center;gap:8px;margin-bottom:6px;}
+.sp-lbl{font-size:11px;font-weight:600;color:var(--txt2);}
+.sp-bar{display:flex;justify-content:space-between;align-items:center;padding-top:8px;border-top:1px solid var(--bdr);margin-top:7px;}
+.sp-rem{font-size:10px;font-weight:700;color:var(--g2);}
+.sp-hint{font-size:9px;color:var(--txt3);}
+
+/* ── BULK ── */
+.bs{background:#fff;border:1px solid var(--bdr);border-radius:var(--r);margin-bottom:11px;overflow:hidden;}
+.bsh{padding:10px 15px;background:var(--gp);border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between;}
+.bsh h4{font-size:12px;font-weight:700;color:var(--g1);display:flex;align-items:center;gap:6px;}
+.bsb{padding:11px 15px;overflow-x:auto;}
+.bhdr{display:grid;gap:6px;margin-bottom:4px;}
+.bhdr span{font-size:8.5px;font-weight:700;color:var(--txt3);text-transform:uppercase;letter-spacing:.6px;padding:0 2px;}
+.bf{display:grid;gap:6px;align-items:end;margin-bottom:6px;}
+/* Gold Given: Bill Date Customer Loan GW NW Rate SG EG del */
+.gf{grid-template-columns:82px 92px minmax(120px,1fr) 90px 65px 65px 60px 82px 82px 22px;}
+/* Hand Given: Bill Date Customer Loan Rate SG EG del */
+.hf{grid-template-columns:82px 92px minmax(120px,1fr) 90px 60px 82px 82px 22px;}
+/* Gold/Hand Close: Bill Customer LoanAmt Interest SG EG del */
+.clf{grid-template-columns:90px minmax(120px,1fr) 100px 100px 82px 82px 22px;}
+/* Expense / Investment: Name Amt Cash SG EG del */
+.eif{grid-template-columns:minmax(120px,1fr) 90px 82px 82px 82px 22px;}
+.bi2{background:var(--gp);border:1.5px solid var(--bdr);border-radius:6px;padding:6px 7px;color:var(--txt);font-size:11px;font-family:inherit;outline:none;width:100%;transition:border-color .2s;}
+.bi2:focus{border-color:var(--g2);background:#fff;}
+.bi2::placeholder{color:var(--txt4);}
+.rmb{background:none;border:none;color:var(--txt4);cursor:pointer;font-size:17px;padding:0;line-height:1;align-self:center;transition:color .15s;}
+.rmb:hover{color:var(--r1);}
+.imp-bar{background:#fff;border:1px solid var(--bdr);border-radius:var(--r);padding:13px 17px;margin-bottom:13px;}
+.imp-bar h4{font-size:9px;font-weight:700;color:var(--txt3);text-transform:uppercase;letter-spacing:.9px;margin-bottom:9px;}
+.imp-cols{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;}
+.imp-col{text-align:center;background:var(--gp);border-radius:7px;padding:10px;}
+.imp-col .icn{font-size:9px;font-weight:600;color:var(--txt3);margin-bottom:2px;}
+.imp-val{font-size:16px;font-weight:700;letter-spacing:-.3px;}
+.pos{color:var(--g1);}
+.neg{color:var(--r1);}
+.neu{color:var(--txt3);}
+
+/* ── LEDGER ── */
+.lb{background:#fff;border:1px solid var(--bdr);border-radius:var(--r);padding:15px;margin-bottom:11px;}
+.lb-t{font-size:9px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.8px;margin-bottom:9px;}
+.lb-g{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+.lbc{background:var(--gp);border-radius:7px;padding:9px;text-align:center;}
+.lbc-l{font-size:9px;font-weight:600;color:var(--txt3);margin-bottom:2px;}
+.lbc-v{font-size:16px;font-weight:700;color:var(--g1);}
+.lbc-v.tot{color:var(--txt);}
+.txl{background:#fff;border:1px solid var(--bdr);border-radius:var(--r);overflow:hidden;margin-bottom:11px;}
+.txi{display:grid;grid-template-columns:82px 60px 1fr 95px 85px 85px 85px;gap:7px;padding:9px 13px;border-bottom:1px solid var(--gr);align-items:center;font-size:11px;}
+.txi:last-child{border-bottom:none;}
+.txi:hover{background:var(--gp);}
+.txi.txhdr{background:var(--gr);font-size:8.5px;font-weight:700;color:var(--txt3);text-transform:uppercase;letter-spacing:.5px;}
+.txdir{font-size:10px;font-weight:700;}
+.txdir.in{color:var(--g2);}
+.txdir.out{color:var(--r1);}
+.amc{font-size:11px;font-weight:600;}
+.amc.pos{color:var(--g1);}
+.amc.neg{color:var(--r1);}
+.amc.neu{color:var(--txt4);}
+.ls{background:#fff;border:1px solid var(--bdr);border-radius:var(--r);padding:15px;display:flex;gap:22px;flex-wrap:wrap;margin-bottom:11px;}
+.ls-i label{font-size:9px;font-weight:700;color:var(--txt3);text-transform:uppercase;letter-spacing:.8px;display:block;margin-bottom:2px;}
+.ls-i span{font-size:14px;font-weight:700;}
+
+/* ── SETTINGS / IMPORT / BACKUP ── */
+.stg{background:#fff;border:1px solid var(--bdr);border-radius:var(--r);padding:20px;margin-bottom:11px;}
+.stg h3{font-family:'IBM Plex Serif',serif;font-size:15px;color:var(--g1);margin-bottom:5px;}
+.stg p{font-size:12px;color:var(--txt2);line-height:1.7;margin-bottom:13px;}
+.steps{list-style:none;counter-reset:s;}
+.steps li{counter-increment:s;display:flex;gap:9px;margin-bottom:9px;font-size:12px;color:var(--txt2);line-height:1.6;}
+.steps li::before{content:counter(s);min-width:21px;height:21px;background:var(--gp);color:var(--g1);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;margin-top:1px;}
+.steps li strong{color:var(--txt);}
+.sqlbox{background:var(--gr);border:1px solid var(--bdr);border-radius:8px;padding:11px;color:#1B5E20;font-family:monospace;font-size:10px;line-height:1.7;white-space:pre;overflow-x:auto;max-height:230px;overflow-y:auto;}
+.imp-zone{border:2px dashed var(--bdr2);border-radius:10px;padding:30px;text-align:center;cursor:pointer;transition:all .2s;background:var(--gp);}
+.imp-zone:hover,.imp-zone.drag{border-color:var(--g2);background:var(--gl);}
+.imp-zone h3{font-size:13px;font-weight:600;color:var(--g1);margin-bottom:5px;}
+.imp-zone p{font-size:11px;color:var(--txt3);}
+.bkp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:11px;margin-top:6px;}
+.bkp-card{background:var(--gp);border:1px solid var(--bdr);border-radius:9px;padding:16px;text-align:center;}
+.bkp-card .ico{font-size:28px;margin-bottom:7px;}
+.bkp-card .title{font-size:13px;font-weight:700;color:var(--g1);margin-bottom:3px;}
+.bkp-card .sub{font-size:10px;color:var(--txt3);margin-bottom:11px;}
+
+/* ── TOAST ── */
+#toast{position:fixed;bottom:18px;right:18px;background:var(--g1);color:#fff;padding:10px 15px;border-radius:8px;font-size:12px;font-weight:500;opacity:0;transition:opacity .3s;z-index:999;pointer-events:none;max-width:250px;box-shadow:var(--shadow2);}
+#toast.show{opacity:1;}
+#toast.err{background:var(--r1);}
+#toast.ok{background:var(--g2);}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .sb{display:none;}.mob-hdr{display:flex;}.mob-nav{display:flex;}
+  .mw{padding-top:52px;padding-bottom:66px;}
+  .main{padding:13px 11px;}
+  .ah,.db-grid{grid-template-columns:1fr;}
+  .sc-grid{grid-template-columns:repeat(2,1fr);}
+  .lb-g{grid-template-columns:1fr 1fr;}
+  .txi{grid-template-columns:72px 1fr 75px;}
+  .txi span:nth-child(n+5){display:none;}
+  .fg2,.fg3{grid-template-columns:1fr;}
+  .gf,.hf,.clf,.eif{grid-template-columns:1fr 1fr;}
+  .imp-cols{grid-template-columns:1fr;}
+}
+@media(max-width:480px){.sc-grid,.ah{grid-template-columns:1fr;}}
+
+/* ── MOBILE DRAWER ── */
+.mob-drawer-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:400;cursor:pointer;}
+.mob-drawer-ov.open{display:flex;align-items:flex-end;}
+.mob-drawer{position:relative;width:100%;background:var(--g1);border-radius:18px 18px 0 0;z-index:401;padding:10px 0 34px;transform:translateY(100%);transition:transform .28s cubic-bezier(.4,0,.2,1);cursor:default;}
+.mob-drawer-ov.open .mob-drawer{transform:translateY(0);}
+.mob-drawer-handle{width:36px;height:4px;background:rgba(255,255,255,.25);border-radius:2px;margin:0 auto 14px;}
+.mob-drawer-title{font-size:9px;font-weight:700;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:1.5px;padding:0 18px 9px;}
+.mob-drawer-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:3px;padding:0 8px;}
+.mdg-item{display:flex;flex-direction:column;align-items:center;gap:5px;padding:12px 4px;border-radius:10px;cursor:pointer;font-size:9px;font-weight:600;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.3px;text-align:center;transition:background .15s;}
+.mdg-item:active{background:rgba(255,255,255,.12);}
+.mdg-item.active{color:var(--y2);background:rgba(255,255,255,.08);}
+.mdg-item svg{width:22px;height:22px;opacity:.75;}
+.mdg-item.active svg{opacity:1;}
+.mob-drawer-sep{height:1px;background:rgba(255,255,255,.1);margin:10px 18px;}
+.mob-signout{display:flex;align-items:center;justify-content:center;gap:7px;margin:10px 18px 0;padding:11px;background:rgba(255,255,255,.07);border-radius:9px;cursor:pointer;font-size:12px;font-weight:600;color:rgba(255,255,255,.55);}
+.mob-signout:active{background:var(--r1);color:#fff;}
+
+/* ── HAMBURGER BUTTON ── */
+.mob-menu-btn{background:rgba(255,255,255,.12);border:none;border-radius:8px;width:38px;height:38px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;cursor:pointer;padding:0;flex-shrink:0;}
+.mob-menu-btn span{display:block;width:18px;height:2px;background:#fff;border-radius:2px;}
+
+/* ── SIDE DRAWER ITEMS ── */
+.sdi{display:flex;align-items:center;gap:10px;padding:11px 10px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:500;color:rgba(255,255,255,.65);margin-bottom:2px;-webkit-tap-highlight-color:transparent;}
+.sdi:active,.sdi.active{background:rgba(255,255,255,.15);color:#fff;}
+.sdi svg{flex-shrink:0;opacity:.7;}
+.sdi.active svg{opacity:1;}
+</style>
+</head>
+<body>
+
+<!-- ═══ LOGIN ═══ -->
+<div id="loginScreen">
+  <div class="lc">
+    <div class="lc-brand">
+      <div class="lc-icon">⚜</div>
+      <h1>Mani Finance</h1>
+      <p>Management System</p>
+    </div>
+    <label class="lbl">Username</label>
+    <input class="inp" id="lu" placeholder="Enter username" onkeydown="if(event.key==='Enter')login()">
+    <label class="lbl">Password</label>
+    <input class="inp" type="password" id="lp" placeholder="Enter password" onkeydown="if(event.key==='Enter')login()">
+    <button class="btn-login" onclick="login()">Sign In →</button>
+    <div class="lerr" id="lerr"></div>
+  </div>
+</div>
+
+<!-- ═══ APP ═══ -->
+<div id="app">
+  <div class="mob-hdr">
+    <button class="mob-menu-btn" onclick="openDrawer()">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="mob-brand"><div class="mob-bi">⚜</div>Mani Finance</div>
+    <span style="font-size:10px;color:rgba(255,255,255,.55)" id="mobU"></span>
+  </div>
+  <div class="aw">
+    <!-- SIDEBAR -->
+    <div class="sb">
+      <div class="sb-top">
+        <div class="sb-brand"><div class="sb-bi">⚜</div><div class="sb-bt"><h2>MFinance</h2><p>Finance Mgr</p></div></div>
+      </div>
+      <div class="sb-usr">
+        <div class="sb-av" id="sbAv">A</div>
+        <div><div class="sb-un" id="sbNm">Admin</div><div class="sb-ur" id="sbRl">Owner</div></div>
+      </div>
+      <div class="sb-nav">
+        <div class="ng">Main</div>
+        <div class="ni active" id="ni-db" onclick="go('db')"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Dashboard</div>
+        <div class="ni" id="ni-bulk" onclick="go('bulk')"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>End of Day Entry</div>
+        <div class="ng">Records</div>
+        <div class="ni" id="ni-gold" onclick="go('gold')"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>Gold Loans</div>
+        <div class="ni" id="ni-hand" onclick="go('hand')"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Hand Loans</div>
+        <div class="ni" id="ni-inv" onclick="go('inv')"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>Investments</div>
+        <div class="ni" id="ni-exp" onclick="go('exp')"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>Expenses</div>
+        <div class="ng">Finance</div>
+        <div class="ni" id="ni-led" onclick="go('led')"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Daily Ledger</div>
+        <div class="ni" id="ni-acc" onclick="go('acc')"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>Accounts</div>
+        <div class="ng">Data</div>
+        <div class="ni" id="ni-imp" onclick="go('imp')"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Import Data</div>
+        <div class="ni" id="ni-bkp" onclick="go('bkp')"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Backup & Export</div>
+        <div class="ng">System</div>
+        <div class="ni" id="ni-set" onclick="go('set')"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Settings</div>
+      </div>
+      <div class="sb-bot"><button class="btn-out" onclick="logout()">Sign Out</button></div>
+    </div>
+
+    <!-- MAIN -->
+    <div class="mw"><div class="main">
+
+      <!-- DASHBOARD -->
+      <div class="page active" id="pg-db">
+        <div class="ph"><div class="ph-l"><h2>Dashboard</h2><p id="dbDate"></p></div><div class="ph-r"><button class="btn btn-gh" onclick="go('bulk')">+ Day Entry</button><button class="btn btn-g" onclick="go('bkp')">⬇ Backup</button></div></div>
+        <div class="ah" id="ahero"></div>
+        <div class="sc-grid" id="scards"></div>
+        <div class="db-grid" id="dblocks"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:11px">
+          <div class="tc"><div class="tc-hd"><h3>Recent Gold Loans</h3></div><table><thead><tr><th>Bill</th><th>Customer</th><th>Amount</th><th>Status</th></tr></thead><tbody id="dgold"></tbody></table></div>
+          <div class="tc"><div class="tc-hd"><h3>Recent Hand Loans</h3></div><table><thead><tr><th>Bill</th><th>Customer</th><th>Amount</th><th>Status</th></tr></thead><tbody id="dhand"></tbody></table></div>
+        </div>
+      </div>
+
+      <!-- BULK ENTRY -->
+      <div class="page" id="pg-bulk">
+        <div class="ph"><div class="ph-l"><h2>End of Day Entry</h2><p>Enter all transactions for the day in one shot</p></div>
+          <div class="ph-r"><div class="fg"><label style="font-size:9px">Entry Date</label><input type="date" id="bulkDate" class="dinp"></div></div></div>
+
+        <div class="bs"><div class="bsh"><h4>🥇 New Gold Loans Given</h4><button class="btn btn-gh" style="font-size:10px;padding:4px 9px" onclick="addBR('g')">+ Add Row</button></div>
+          <div class="bsb">
+            <div class="bhdr gf"><span>Bill No</span><span>Date</span><span>Customer | Phone | Address | Items</span><span>Loan ₹</span><span>Gr.Wt</span><span>Nt.Wt</span><span>Rate%</span><span>SG Phone ₹</span><span>EG Phone ₹</span><span></span></div>
+            <div id="bGold"></div>
+          </div></div>
+
+        <div class="bs"><div class="bsh"><h4>🤝 New Hand Loans Given</h4><button class="btn btn-gh" style="font-size:10px;padding:4px 9px" onclick="addBR('h')">+ Add Row</button></div>
+          <div class="bsb">
+            <div class="bhdr hf"><span>Bill No</span><span>Date</span><span>Customer | Phone</span><span>Loan ₹</span><span>Rate%</span><span>SG Phone ₹</span><span>EG Phone ₹</span><span></span></div>
+            <div id="bHand"></div>
+          </div></div>
+
+        <div class="bs"><div class="bsh"><h4>✅ Gold Loans Closed Today</h4><button class="btn btn-gh" style="font-size:10px;padding:4px 9px" onclick="addBR('gc')">+ Add Row</button></div>
+          <div class="bsb">
+            <div class="bhdr clf"><span>Bill No</span><span>Customer Name</span><span>Loan Amount ₹</span><span>Interest Received ₹</span><span>SG Phone ₹</span><span>EG Phone ₹</span><span></span></div>
+            <div id="bGC"></div>
+          </div></div>
+
+        <div class="bs"><div class="bsh"><h4>✅ Hand Loans Closed Today</h4><button class="btn btn-gh" style="font-size:10px;padding:4px 9px" onclick="addBR('hc')">+ Add Row</button></div>
+          <div class="bsb">
+            <div class="bhdr clf"><span>Bill No</span><span>Customer Name</span><span>Loan Amount ₹</span><span>Interest Received ₹</span><span>SG Phone ₹</span><span>EG Phone ₹</span><span></span></div>
+            <div id="bHC"></div>
+          </div></div>
+
+        <div class="bs"><div class="bsh"><h4>🧾 Expenses Paid Today</h4><button class="btn btn-gh" style="font-size:10px;padding:4px 9px" onclick="addBR('e')">+ Add Row</button></div>
+          <div class="bsb">
+            <div class="bhdr eif"><span>Expense Name</span><span>Amount ₹</span><span>Cash ₹</span><span>SG Phone ₹</span><span>EG Phone ₹</span><span></span></div>
+            <div id="bExp"></div>
+          </div></div>
+
+        <div class="bs"><div class="bsh"><h4>📈 Investments Received Today</h4><button class="btn btn-gh" style="font-size:10px;padding:4px 9px" onclick="addBR('i')">+ Add Row</button></div>
+          <div class="bsb">
+            <div class="bhdr eif"><span>Partner Name</span><span>Amount ₹</span><span>Cash ₹</span><span>SG Phone ₹</span><span>EG Phone ₹</span><span></span></div>
+            <div id="bInv"></div>
+          </div></div>
+
+        <div class="imp-bar"><h4>Today's Net Impact <span style="color:var(--txt4);font-size:8px;margin-left:4px">(SG/EG blank = auto cash)</span></h4>
+          <div class="imp-cols">
+            <div class="imp-col"><div class="icn">💵 Cash Change</div><div class="imp-val neu" id="impC">₹0</div></div>
+            <div class="imp-col"><div class="icn">🏦 SG Phone Change</div><div class="imp-val neu" id="impS">₹0</div></div>
+            <div class="imp-col"><div class="icn">🏦 EG Phone Change</div><div class="imp-val neu" id="impE">₹0</div></div>
+          </div></div>
+        <div style="display:flex;justify-content:flex-end;gap:8px">
+          <button class="btn btn-gh" onclick="clearBulk()">Clear All</button>
+          <button class="btn btn-g" onclick="saveBulk()">💾 Save All Transactions</button>
+        </div>
+      </div>
+
+      <!-- GOLD LOANS -->
+      <div class="page" id="pg-gold">
+        <div class="ph"><div class="ph-l"><h2>Gold Loans</h2><p>All pledge bill transactions</p></div>
+          <div class="ph-r"><input class="sinp" placeholder="Search customer / bill…" oninput="renderGold(this.value)"><button class="btn btn-g" onclick="openGM()">+ New Bill</button></div></div>
+        <div class="tc"><div class="tw"><table><thead><tr><th>#</th><th>Bill No</th><th>Date</th><th>Customer</th><th>Phone</th><th>Items</th><th>Wt(g)</th><th>Loan ₹</th><th>Rate%</th><th>Interest ₹</th><th>Cash ₹</th><th>SG Phone ₹</th><th>EG Phone ₹</th><th>Status</th><th>Actions</th></tr></thead><tbody id="goldTbl"></tbody></table></div></div>
+      </div>
+
+      <!-- HAND LOANS -->
+      <div class="page" id="pg-hand">
+        <div class="ph"><div class="ph-l"><h2>Hand Loans</h2><p>All outside / hand loans</p></div>
+          <div class="ph-r"><input class="sinp" placeholder="Search customer / bill…" oninput="renderHand(this.value)"><button class="btn btn-g" onclick="openHM()">+ New Loan</button></div></div>
+        <div class="tc"><div class="tw"><table><thead><tr><th>#</th><th>Bill No</th><th>Date</th><th>Customer</th><th>Phone</th><th>Loan ₹</th><th>Rate%</th><th>Interest ₹</th><th>Cash ₹</th><th>SG Phone ₹</th><th>EG Phone ₹</th><th>Repay Date</th><th>Status</th><th>Actions</th></tr></thead><tbody id="handTbl"></tbody></table></div></div>
+      </div>
+
+      <!-- INVESTMENTS -->
+      <div class="page" id="pg-inv">
+        <div class="ph"><div class="ph-l"><h2>Investments</h2><p>Partner investments received</p></div><div class="ph-r"><button class="btn btn-g" onclick="openIM()">+ Add Investment</button></div></div>
+        <div class="tc"><div class="tw"><table><thead><tr><th>#</th><th>Date</th><th>Partner</th><th>Amount ₹</th><th>Cash ₹</th><th>SG Phone ₹</th><th>EG Phone ₹</th><th>Status</th><th>Comments</th><th>Actions</th></tr></thead><tbody id="invTbl"></tbody></table></div></div>
+      </div>
+
+      <!-- EXPENSES -->
+      <div class="page" id="pg-exp">
+        <div class="ph"><div class="ph-l"><h2>Expenses</h2><p>Business expenses paid</p></div><div class="ph-r"><button class="btn btn-g" onclick="openEM()">+ Add Expense</button></div></div>
+        <div class="tc"><div class="tw"><table><thead><tr><th>#</th><th>Date</th><th>Name</th><th>Amount ₹</th><th>Cash ₹</th><th>SG Phone ₹</th><th>EG Phone ₹</th><th>Comments</th><th>Actions</th></tr></thead><tbody id="expTbl"></tbody></table></div></div>
+      </div>
+
+      <!-- LEDGER -->
+      <div class="page" id="pg-led">
+        <div class="ph"><div class="ph-l"><h2>Daily Ledger</h2><p>Opening balance → transactions → closing balance</p></div>
+          <div class="ph-r" style="gap:6px">
+            <label style="font-size:10px;color:var(--txt3)">From</label><input type="date" id="lf" class="dinp">
+            <label style="font-size:10px;color:var(--txt3)">To</label><input type="date" id="lt" class="dinp">
+            <button class="btn btn-g" onclick="renderLed()">View</button>
+            <button class="btn btn-gh" onclick="exportLedger()">⬇ Export</button>
+          </div></div>
+        <div id="ledOut"></div>
+      </div>
+
+      <!-- ACCOUNTS -->
+      <div class="page" id="pg-acc">
+        <div class="ph"><div class="ph-l"><h2>Account Summary</h2><p>Balance per payment channel</p></div>
+          <div class="ph-r" style="gap:6px">
+            <label style="font-size:10px;color:var(--txt3)">From</label><input type="date" id="af" class="dinp">
+            <label style="font-size:10px;color:var(--txt3)">To</label><input type="date" id="at" class="dinp">
+            <button class="btn btn-g" onclick="renderAcc()">View</button>
+          </div></div>
+        <div class="ah" id="accCards"></div>
+        <div class="tc"><div class="tc-hd"><h3>All Transactions</h3></div>
+          <div class="tw"><table><thead><tr><th>Date</th><th>Type</th><th>Description</th><th>Total</th><th>Cash ₹</th><th>SG Phone ₹</th><th>EG Phone ₹</th><th>Dir</th></tr></thead><tbody id="accTbl"></tbody></table></div></div>
+      </div>
+
+      <!-- IMPORT -->
+      <div class="page" id="pg-imp">
+        <div class="ph"><div class="ph-l"><h2>Import Data</h2><p>Upload your filled Excel template to load all data at once</p></div></div>
+        <div class="stg">
+          <h3>📥 Upload Excel Template</h3>
+          <p>Download the compatible import template, fill your data, and upload here. All rows import instantly — existing data is preserved.</p>
+          <div class="imp-zone" id="dropZone" onclick="document.getElementById('fileInp').click()" ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')" ondrop="handleDrop(event)">
+            <div style="font-size:36px;margin-bottom:9px">📂</div>
+            <h3>Click to browse or drag & drop your Excel file</h3>
+            <p>.xlsx files only · MFinance Import Template format</p>
+          </div>
+          <input type="file" id="fileInp" accept=".xlsx" style="display:none" onchange="handleFile(this.files[0])">
+          <div id="impResult" style="display:none;margin-top:12px;background:var(--gp);border:1px solid var(--bdr);border-radius:8px;padding:13px;"></div>
+        </div>
+        <div class="stg">
+          <h3>📋 Import Rules</h3>
+          <ul style="font-size:12px;color:var(--txt2);line-height:2.1;padding-left:18px">
+            <li>Dates must be in <strong>DD-MM-YYYY</strong> format (e.g. 20-02-2026)</li>
+            <li>Status must be exactly <strong>Open</strong> or <strong>Closed</strong></li>
+            <li>Amount columns must be plain numbers — no ₹ or commas</li>
+            <li>Leave Cash column blank — it auto-calculates from SG + EG amounts</li>
+            <li>Import adds new records; existing data is not overwritten</li>
+            <li>Sheet names must match exactly: <strong>Gold Loans, Hand Loans, Investments, Expenses</strong></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- BACKUP -->
+      <div class="page" id="pg-bkp">
+        <div class="ph"><div class="ph-l"><h2>Backup & Export</h2><p>Download all your data as Excel — for backup or migration</p></div></div>
+        <div class="stg">
+          <h3>📦 Download Backup</h3>
+          <p>One combined Excel file with all 4 data sheets. Download regularly to keep a safe copy of all your records.</p>
+          <div class="bkp-grid">
+            <div class="bkp-card"><div class="ico">📊</div><div class="title">Complete Backup</div><div class="sub" id="totalCount">All sections</div><button class="btn btn-g" style="width:100%" onclick="exportAll()">⬇ Download All Data</button></div>
+            <div class="bkp-card"><div class="ico">🥇</div><div class="title">Gold Loans Only</div><div class="sub" id="goldCnt">— records</div><button class="btn btn-gh" style="width:100%" onclick="exportSheet('gold')">⬇ Export Gold Loans</button></div>
+            <div class="bkp-card"><div class="ico">🤝</div><div class="title">Hand Loans Only</div><div class="sub" id="handCnt">— records</div><button class="btn btn-gh" style="width:100%" onclick="exportSheet('hand')">⬇ Export Hand Loans</button></div>
+            <div class="bkp-card"><div class="ico">📈</div><div class="title">Investments Only</div><div class="sub" id="invCnt">— records</div><button class="btn btn-gh" style="width:100%" onclick="exportSheet('inv')">⬇ Export Investments</button></div>
+            <div class="bkp-card"><div class="ico">🧾</div><div class="title">Expenses Only</div><div class="sub" id="expCnt">— records</div><button class="btn btn-gh" style="width:100%" onclick="exportSheet('exp')">⬇ Export Expenses</button></div>
+          </div>
+        </div>
+        <div class="stg">
+          <h3>💡 Backup Tips</h3>
+          <ul style="font-size:12px;color:var(--txt2);line-height:2.1;padding-left:18px">
+            <li>Download a full backup <strong>every week</strong> as a safety measure</li>
+            <li>Save backup files to <strong>Google Drive or WhatsApp</strong> for extra safety</li>
+            <li>Connect Supabase in Settings for automatic cloud backup</li>
+            <li>The exported file is compatible with the Import screen — re-import if needed</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SETTINGS -->
+      <div class="page" id="pg-set">
+        <div class="ph"><div class="ph-l"><h2>Settings</h2><p>Supabase connection, opening balances & passwords</p></div></div>
+        <div class="stg">
+          <h3>🔗 Supabase Cloud Connection</h3>
+          <p>Connect a free Supabase database so your data is saved in the cloud — accessible from any device, never lost.</p>
+          <ol class="steps">
+            <li>Go to <strong>supabase.com</strong> → Create free account → New Project</li>
+            <li>Go to <strong>SQL Editor</strong> → paste the SQL script below → click Run</li>
+            <li>Go to <strong>Project Settings → API</strong> → copy URL and anon key</li>
+            <li>Paste both below and click Save & Test</li>
+          </ol>
+          <div class="fg2" style="margin-top:12px">
+            <div class="fg"><label>Supabase Project URL</label><input type="text" id="cfgUrl" placeholder="https://xxxx.supabase.co"></div>
+            <div class="fg"><label>Supabase Anon Key</label><input type="password" id="cfgKey" placeholder="eyJhbGci..."></div>
+          </div>
+          <div style="display:flex;gap:9px;align-items:center;flex-wrap:wrap">
+            <button class="btn btn-g" onclick="saveConfig()">Save & Test Connection</button>
+            <span id="cfgSt" style="font-size:11px;color:var(--txt3)"></span>
+          </div>
+        </div>
+        <div class="stg">
+          <h3>💰 Opening Balances</h3>
+          <p>Set your starting balances — money you had before your first entry in this system.</p>
+          <div class="fg3">
+            <div class="fg"><label>💵 Cash Opening ₹</label><input type="number" id="obC" placeholder="0"></div>
+            <div class="fg"><label>🏦 SG Phone Pay ₹</label><input type="number" id="obS" placeholder="0"></div>
+            <div class="fg"><label>🏦 EG Phone Pay ₹</label><input type="number" id="obE" placeholder="0"></div>
+          </div>
+          <div class="fg" style="margin-top:10px;max-width:200px"><label>Opening Balance Date</label><input type="date" id="obD" style="background:var(--gp);border:1.5px solid var(--bdr);border-radius:7px;padding:8px 10px;color:var(--txt);font-size:12.5px;font-family:inherit;outline:none;width:100%;"></div>
+          <button class="btn btn-g" style="margin-top:12px" onclick="saveOB()">Save Opening Balances</button>
+        </div>
+        <div class="stg">
+          <h3>🔑 Change Passwords</h3>
+          <div class="fg2">
+            <div class="fg"><label>Admin New Password</label><input type="password" id="pw1" placeholder="Leave blank to keep current"></div>
+            <div class="fg"><label>User2 New Password</label><input type="password" id="pw2" placeholder="Leave blank to keep current"></div>
+          </div>
+          <button class="btn btn-g" style="margin-top:8px" onclick="savePW()">Update Passwords</button>
+        </div>
+        <div class="stg">
+          <h3>📋 SQL Setup Script</h3>
+          <p>Run this once in Supabase SQL Editor to create all tables:</p>
+          <div class="sqlbox" id="sqlBox"></div>
+          <button class="btn btn-gh" style="margin-top:9px" onclick="copySql()">📋 Copy SQL</button>
+        </div>
+      </div>
+
+    </div></div><!-- end .main / .mw -->
+  </div><!-- end .aw -->
+
+  <!-- MOBILE BOTTOM NAV -->
+  <div class="mob-nav">
+    <div class="mi active" id="mn-db" onclick="go('db')"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Home</div>
+    <div class="mi" id="mn-bulk" onclick="go('bulk')"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>Day Entry</div>
+    <div class="mi" id="mn-gold" onclick="go('gold')"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/></svg>Gold</div>
+    <div class="mi" id="mn-led" onclick="go('led')"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Ledger</div>
+    <div class="mi" id="mn-bkp" onclick="go('bkp')"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Backup</div>
+  </div>
+
+  <!-- SIDE DRAWER MENU -->
+  <div id="mobDrawerOv" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:550;background:rgba(0,0,0,0.5);">
+    <div id="mobDrawer" style="position:fixed;top:0;left:0;bottom:0;width:78%;max-width:300px;background:#1B5E20;overflow-y:auto;box-shadow:4px 0 24px rgba(0,0,0,0.3);z-index:560;">
+      <!-- Header -->
+      <div style="padding:18px 16px 12px;border-bottom:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:space-between;">
+        <div style="display:flex;align-items:center;gap:9px;">
+          <div style="width:32px;height:32px;background:#FDD835;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;">⚜</div>
+          <div><div style="font-size:14px;font-weight:700;color:#fff;">Mani Finance</div><div id="drawerUser" style="font-size:10px;color:rgba(255,255,255,.5);">Admin</div></div>
+        </div>
+        <button onclick="closeDrawer()" style="background:rgba(255,255,255,.1);border:none;color:#fff;width:30px;height:30px;border-radius:7px;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>
+      </div>
+      <!-- Menu Items -->
+      <div style="padding:10px 10px;">
+        <div style="font-size:8px;font-weight:700;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:1.5px;padding:10px 8px 5px;">Main</div>
+        <div class="sdi" onclick="goD('db')" id="sd-db">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="16" height="16"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Dashboard</div>
+        <div class="sdi" onclick="goD('bulk')" id="sd-bulk">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="16" height="16"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>End of Day Entry</div>
+        <div style="font-size:8px;font-weight:700;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:1.5px;padding:10px 8px 5px;">Records</div>
+        <div class="sdi" onclick="goD('gold')" id="sd-gold">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="16" height="16"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>Gold Loans</div>
+        <div class="sdi" onclick="goD('hand')" id="sd-hand">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="16" height="16"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Hand Loans</div>
+        <div class="sdi" onclick="goD('inv')" id="sd-inv">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="16" height="16"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>Investments</div>
+        <div class="sdi" onclick="goD('exp')" id="sd-exp">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="16" height="16"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>Expenses</div>
+        <div style="font-size:8px;font-weight:700;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:1.5px;padding:10px 8px 5px;">Finance</div>
+        <div class="sdi" onclick="goD('led')" id="sd-led">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="16" height="16"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Daily Ledger</div>
+        <div class="sdi" onclick="goD('acc')" id="sd-acc">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="16" height="16"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>Accounts</div>
+        <div style="font-size:8px;font-weight:700;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:1.5px;padding:10px 8px 5px;">Data</div>
+        <div class="sdi" onclick="goD('imp')" id="sd-imp">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="16" height="16"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Import Data</div>
+        <div class="sdi" onclick="goD('bkp')" id="sd-bkp">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="16" height="16"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Backup & Export</div>
+        <div class="sdi" onclick="goD('set')" id="sd-set">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="16" height="16"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Settings</div>
+        <div style="margin-top:14px;padding:12px 8px;border-top:1px solid rgba(255,255,255,.1);">
+          <div onclick="logout()" style="display:flex;align-items:center;gap:10px;padding:11px 10px;border-radius:8px;background:rgba(255,255,255,.07);color:rgba(255,255,255,.6);font-size:13px;font-weight:600;cursor:pointer;">
+            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Sign Out
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MODALS ═══ -->
+<!-- Gold Modal -->
+<div class="ov" id="gModal"><div class="modal modal-lg">
+  <div class="mt">🥇 <span id="gMT">New Gold Loan Bill</span></div><input type="hidden" id="gId">
+  <div class="fg3"><div class="fg"><label>Bill No</label><input type="text" id="gBill" placeholder="A-01"></div><div class="fg"><label>Date</label><input type="date" id="gDate"></div><div class="fg"><label>Status</label><select id="gStat" onchange="tGC()"><option>Open</option><option>Closed</option></select></div></div>
+  <div class="fg2"><div class="fg"><label>Customer Name</label><input type="text" id="gCust" placeholder="Full name"></div><div class="fg"><label>Phone</label><input type="text" id="gPhone" placeholder="Phone number"></div></div>
+  <div class="fg1"><div class="fg"><label>Address</label><input type="text" id="gAddr" placeholder="Customer address"></div></div>
+  <div class="fg3"><div class="fg"><label>Items</label><input type="text" id="gItems" placeholder="Ring, Chain…"></div><div class="fg"><label>Gross Weight (g)</label><input type="number" id="gGW" placeholder="0"></div><div class="fg"><label>Net Weight (g)</label><input type="number" id="gNW" placeholder="0"></div></div>
+  <div class="fg2"><div class="fg"><label>Loan Amount ₹</label><input type="number" id="gLoan" placeholder="0" oninput="updS('g')"></div><div class="fg"><label>Interest Rate (%/month)</label><input type="number" id="gRate" placeholder="1.5" step="0.1"></div></div>
+  <div class="spb"><div class="sp-t">💰 Loan Given — Payment Split</div>
+    <div class="sp-row"><span class="sp-lbl">💵 Cash</span><input class="bi2" type="number" id="gCash" placeholder="Auto-calculated" oninput="updS('g')"></div>
+    <div class="sp-row"><span class="sp-lbl">🏦 SG Phone Pay</span><input class="bi2" type="number" id="gSG" placeholder="0" oninput="updS('g')"></div>
+    <div class="sp-row"><span class="sp-lbl">🏦 EG Phone Pay</span><input class="bi2" type="number" id="gEG" placeholder="0" oninput="updS('g')"></div>
+    <div class="sp-bar"><span class="sp-hint">Leave Cash blank → auto-calculated</span><span class="sp-rem" id="gRem">Cash auto: ₹0</span></div></div>
+  <div id="gCD" style="display:none;margin-top:10px">
+    <div class="fg3"><div class="fg"><label>Release Date</label><input type="date" id="gRD"></div><div class="fg"><label>Interest Received ₹</label><input type="number" id="gIR" placeholder="0" oninput="updCS('g')"></div><div></div></div>
+    <div class="spb"><div class="sp-t">💰 Amount Received Back — Split</div>
+      <div class="sp-row"><span class="sp-lbl">💵 Cash</span><input class="bi2" type="number" id="gRC" placeholder="Auto-calculated" oninput="updCS('g')"></div>
+      <div class="sp-row"><span class="sp-lbl">🏦 SG Phone Pay</span><input class="bi2" type="number" id="gRS" placeholder="0" oninput="updCS('g')"></div>
+      <div class="sp-row"><span class="sp-lbl">🏦 EG Phone Pay</span><input class="bi2" type="number" id="gRE" placeholder="0" oninput="updCS('g')"></div>
+      <div class="sp-bar"><span class="sp-hint">Leave Cash blank → auto-calculated</span><span class="sp-rem" id="gRRem">Cash auto: ₹0</span></div></div>
+  </div>
+  <div class="mf"><button class="btn btn-gh" onclick="closeM('gModal')">Cancel</button><button class="btn btn-g" onclick="saveGold()">Save Bill</button></div>
+</div></div>
+
+<!-- Hand Modal -->
+<div class="ov" id="hModal"><div class="modal">
+  <div class="mt">🤝 <span id="hMT">New Hand Loan</span></div><input type="hidden" id="hId">
+  <div class="fg2"><div class="fg"><label>Bill No</label><input type="text" id="hBill" placeholder="H-01"></div><div class="fg"><label>Date</label><input type="date" id="hDate"></div></div>
+  <div class="fg2"><div class="fg"><label>Customer Name</label><input type="text" id="hCust" placeholder="Full name"></div><div class="fg"><label>Phone</label><input type="text" id="hPhone"></div></div>
+  <div class="fg2"><div class="fg"><label>Loan Amount ₹</label><input type="number" id="hLoan" placeholder="0" oninput="updS('h')"></div><div class="fg"><label>Interest Rate (%/month)</label><input type="number" id="hRate" placeholder="1.5" step="0.1"></div></div>
+  <div class="fg2"><div class="fg"><label>Status</label><select id="hStat" onchange="tHC()"><option>Open</option><option>Closed</option></select></div><div class="fg"><label>Expected Repay Date</label><input type="date" id="hRD2"></div></div>
+  <div class="spb"><div class="sp-t">💰 Loan Given — Payment Split</div>
+    <div class="sp-row"><span class="sp-lbl">💵 Cash</span><input class="bi2" type="number" id="hCash" placeholder="Auto-calculated" oninput="updS('h')"></div>
+    <div class="sp-row"><span class="sp-lbl">🏦 SG Phone Pay</span><input class="bi2" type="number" id="hSG" placeholder="0" oninput="updS('h')"></div>
+    <div class="sp-row"><span class="sp-lbl">🏦 EG Phone Pay</span><input class="bi2" type="number" id="hEG" placeholder="0" oninput="updS('h')"></div>
+    <div class="sp-bar"><span class="sp-hint">Leave Cash blank → auto-calculated</span><span class="sp-rem" id="hRem">Cash auto: ₹0</span></div></div>
+  <div id="hCD" style="display:none;margin-top:10px">
+    <div class="fg2"><div class="fg"><label>Repay Date (Actual)</label><input type="date" id="hRelD"></div><div class="fg"><label>Interest Received ₹</label><input type="number" id="hIR" placeholder="0" oninput="updCS('h')"></div></div>
+    <div class="spb"><div class="sp-t">💰 Amount Received Back — Split</div>
+      <div class="sp-row"><span class="sp-lbl">💵 Cash</span><input class="bi2" type="number" id="hRC" placeholder="Auto-calculated" oninput="updCS('h')"></div>
+      <div class="sp-row"><span class="sp-lbl">🏦 SG Phone Pay</span><input class="bi2" type="number" id="hRS" placeholder="0" oninput="updCS('h')"></div>
+      <div class="sp-row"><span class="sp-lbl">🏦 EG Phone Pay</span><input class="bi2" type="number" id="hRE" placeholder="0" oninput="updCS('h')"></div>
+      <div class="sp-bar"><span class="sp-hint">Leave Cash blank → auto-calculated</span><span class="sp-rem" id="hRRem">Cash auto: ₹0</span></div></div>
+  </div>
+  <div class="mf"><button class="btn btn-gh" onclick="closeM('hModal')">Cancel</button><button class="btn btn-g" onclick="saveHand()">Save Loan</button></div>
+</div></div>
+
+<!-- Inv Modal -->
+<div class="ov" id="iModal"><div class="modal">
+  <div class="mt">📈 Investment</div><input type="hidden" id="iId">
+  <div class="fg2"><div class="fg"><label>Date</label><input type="date" id="iDate"></div><div class="fg"><label>Partner Name</label><input type="text" id="iPart" placeholder="Partner1"></div></div>
+  <div class="fg2"><div class="fg"><label>Amount ₹</label><input type="number" id="iAmt" placeholder="0" oninput="updS('i')"></div><div class="fg"><label>Status</label><select id="iStat"><option>Open</option><option>Closed</option></select></div></div>
+  <div class="fg1"><div class="fg"><label>Comments</label><input type="text" id="iCmt" placeholder="Optional"></div></div>
+  <div class="spb"><div class="sp-t">💰 Received Via</div>
+    <div class="sp-row"><span class="sp-lbl">💵 Cash</span><input class="bi2" type="number" id="iCash" placeholder="Auto-calculated" oninput="updS('i')"></div>
+    <div class="sp-row"><span class="sp-lbl">🏦 SG Phone Pay</span><input class="bi2" type="number" id="iSG" placeholder="0" oninput="updS('i')"></div>
+    <div class="sp-row"><span class="sp-lbl">🏦 EG Phone Pay</span><input class="bi2" type="number" id="iEG" placeholder="0" oninput="updS('i')"></div>
+    <div class="sp-bar"><span class="sp-hint">Leave Cash blank → auto-calculated</span><span class="sp-rem" id="iRem">Cash auto: ₹0</span></div></div>
+  <div class="mf"><button class="btn btn-gh" onclick="closeM('iModal')">Cancel</button><button class="btn btn-g" onclick="saveInv()">Save</button></div>
+</div></div>
+
+<!-- Exp Modal -->
+<div class="ov" id="eModal"><div class="modal">
+  <div class="mt">🧾 Expense</div><input type="hidden" id="eId">
+  <div class="fg2"><div class="fg"><label>Date</label><input type="date" id="eDate"></div><div class="fg"><label>Expense Name</label><input type="text" id="eName" placeholder="Office Rent"></div></div>
+  <div class="fg2"><div class="fg"><label>Amount ₹</label><input type="number" id="eAmt" placeholder="0" oninput="updS('e')"></div><div class="fg"><label>Comments</label><input type="text" id="eCmt" placeholder="Optional"></div></div>
+  <div class="spb"><div class="sp-t">💰 Paid Via</div>
+    <div class="sp-row"><span class="sp-lbl">💵 Cash</span><input class="bi2" type="number" id="eCash" placeholder="Auto-calculated" oninput="updS('e')"></div>
+    <div class="sp-row"><span class="sp-lbl">🏦 SG Phone Pay</span><input class="bi2" type="number" id="eSG" placeholder="0" oninput="updS('e')"></div>
+    <div class="sp-row"><span class="sp-lbl">🏦 EG Phone Pay</span><input class="bi2" type="number" id="eEG" placeholder="0" oninput="updS('e')"></div>
+    <div class="sp-bar"><span class="sp-hint">Leave Cash blank → auto-calculated</span><span class="sp-rem" id="eRem">Cash auto: ₹0</span></div></div>
+  <div class="mf"><button class="btn btn-gh" onclick="closeM('eModal')">Cancel</button><button class="btn btn-g" onclick="saveExp()">Save</button></div>
+</div></div>
+
+<div id="toast"></div>
+
+<script>
+// ══════════════════════════════════════════
+// CORE
+// ══════════════════════════════════════════
+let CFG=JSON.parse(localStorage.getItem('fs_cfg')||'{"url":"","key":"","pw1":"admin123","pw2":"user456","obC":0,"obS":0,"obE":0,"obD":""}');
+let CU=null;
+const $=e=>document.getElementById(e);
+const v=e=>$(e)?$(e).value:'';
+const n=e=>parseFloat(v(e))||0;
+const gl=k=>JSON.parse(localStorage.getItem('fs_'+k)||'[]');
+const sl=(k,d)=>localStorage.setItem('fs_'+k,JSON.stringify(d));
+const INR=x=>'₹'+Number(x||0).toLocaleString('en-IN');
+const nid=a=>a.length?Math.max(...a.map(x=>+x.id||0))+1:1;
+const todayISO=()=>new Date().toISOString().split('T')[0];
+function toDMY(d){if(!d||d==='-')return '-';const p=d.split('-');return p[0].length===4?`${p[2]}-${p[1]}-${p[0]}`:d;}
+function toISO(d){if(!d)return '';const p=d.toString().split(/[-\/]/);if(p.length!==3)return '';return p[0].length===4?d:`${p[2]}-${p[1]}-${p[0]}`;}
+
+// ── AUTH ──
+function login(){
+  const u=v('lu'),p=v('lp');
+  if((u==='admin'&&p===CFG.pw1)||(u==='user2'&&p===CFG.pw2)){
+    CU={u,name:u==='admin'?'Admin':'Staff',role:u==='admin'?'Owner':'Staff'};
+    sessionStorage.setItem('mf_session',JSON.stringify(CU));
+    showApp();
+  }else $('lerr').textContent='Invalid username or password.';
+}
+function showApp(){
+  $('loginScreen').style.display='none';$('app').style.display='block';
+  $('sbAv').textContent=CU.name[0];$('sbNm').textContent=CU.name;$('sbRl').textContent=CU.role;
+  $('mobU').textContent=CU.name;$('lerr').textContent='';
+  initDates();loadSettings();seedDemo();renderAll();
+  if(!CFG.url)setTimeout(()=>toast('⚙️ Go to Settings to connect Supabase for cloud backup'),2000);
+}
+function logout(){CU=null;sessionStorage.removeItem('mf_session');$('app').style.display='none';$('loginScreen').style.display='flex';}
+function checkSession(){
+  const s=sessionStorage.getItem('mf_session');
+  if(s){try{CU=JSON.parse(s);showApp();return true;}catch(e){}}
+  return false;
+}
+
+// ── NAV ──
+function go(pg){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.ni,.mi').forEach(el=>el.classList.remove('active'));
+  $('pg-'+pg).classList.add('active');
+  [$('ni-'+pg),$('mn-'+pg)].forEach(el=>{if(el)el.classList.add('active');});
+  const actions={db:renderDB,gold:renderGold,hand:renderHand,inv:renderInv,exp:renderExp,led:renderLed,acc:renderAcc,bkp:updateCounts};
+  if(actions[pg])actions[pg]();
+}
+function openM(id){$(id).classList.add('open');}
+function closeM(id){$(id).classList.remove('open');}
+document.addEventListener('click',e=>{if(e.target.classList.contains('ov'))e.target.classList.remove('open');});
+function toast(msg,t=''){const el=$('toast');el.textContent=msg;el.className='show'+(t?' '+t:'');setTimeout(()=>el.className='',3000);}
+
+// ── SEED DEMO ──
+function seedDemo(){
+  if(gl('gold').length===0)sl('gold',[
+    {id:1,bill:'A-01',date:'2026-02-20',cust:'Henry',addr:'Hixdown Town',phone:'123456789',items:'Ring-1',gw:10,nw:8,loan:10000,rate:1.5,stat:'Open',cg:5000,sg:5000,eg:0,rel:'',ir:0,rc:0,rs:0,re:0},
+    {id:2,bill:'A-02',date:'2026-02-21',cust:'Henry',addr:'Hixdown Town',phone:'123456789',items:'Ring-1',gw:10,nw:8,loan:10000,rate:1.5,stat:'Closed',cg:10000,sg:0,eg:0,rel:'2026-02-25',ir:5000,rc:0,rs:15000,re:0},
+    {id:3,bill:'A-03',date:'2025-06-01',cust:'Ravi Kumar',addr:'MG Road',phone:'987654321',items:'Necklace',gw:18,nw:15,loan:15000,rate:1.5,stat:'Closed',cg:15000,sg:0,eg:0,rel:'2025-10-01',ir:3375,rc:18375,rs:0,re:0},
+    {id:4,bill:'A-04',date:'2025-12-01',cust:'Priya Devi',addr:'Anna Nagar',phone:'876543210',items:'Bangles',gw:22,nw:18,loan:20000,rate:2.0,stat:'Open',cg:0,sg:20000,eg:0,rel:'',ir:0,rc:0,rs:0,re:0},
+  ]);
+  if(gl('hand').length===0)sl('hand',[
+    {id:1,bill:'H-01',date:'2026-02-20',cust:'Henry',phone:'123456789',loan:10000,rate:1.5,stat:'Open',repay:'',cg:10000,sg:0,eg:0,ir:0,rc:0,rs:0,re:0},
+    {id:2,bill:'H-02',date:'2026-02-21',cust:'Kumar',phone:'765432109',loan:15000,rate:1.5,stat:'Closed',repay:'2026-02-25',cg:0,sg:15000,eg:0,ir:500,rc:500,rs:15000,re:0},
+    {id:3,bill:'H-03',date:'2025-05-01',cust:'Selvam',phone:'654321098',loan:10000,rate:1.5,stat:'Closed',repay:'2025-09-01',cg:10000,sg:0,eg:0,ir:600,rc:10600,rs:0,re:0},
+    {id:4,bill:'H-04',date:'2025-11-01',cust:'Anbu Raja',phone:'543210987',loan:20000,rate:2.0,stat:'Open',repay:'',cg:20000,sg:0,eg:0,ir:0,rc:0,rs:0,re:0},
+  ]);
+  if(gl('inv').length===0)sl('inv',[
+    {id:1,date:'2026-02-20',part:'Partner1',amt:10000,stat:'Open',cmt:'Initial',ci:10000,si:0,ei:0},
+    {id:2,date:'2026-02-20',part:'Partner2',amt:10000,stat:'Open',cmt:'Initial',ci:0,si:10000,ei:0},
+    {id:3,date:'2026-02-20',part:'Partner3',amt:10000,stat:'Open',cmt:'Initial',ci:0,si:0,ei:10000},
+  ]);
+  if(gl('exp').length===0)sl('exp',[
+    {id:1,date:'2026-02-25',name:'Office Rent',amt:5000,cmt:'Monthly',co:5000,so:0,eo:0},
+    {id:2,date:'2026-02-26',name:'Electricity',amt:1000,cmt:'',co:0,so:1000,eo:0},
+  ]);
+}
+
+// ── BALANCE ENGINE ──
+function calcInt(loan,rate,dateStr){
+  if(!loan||!rate||!dateStr)return 0;
+  const s=new Date(dateStr),now=new Date();
+  const m=Math.max(0,(now.getFullYear()-s.getFullYear())*12+(now.getMonth()-s.getMonth()));
+  return Math.round(loan*(rate/100)*m);
+}
+function autoCash(total,sg,eg){return Math.max(0,total-sg-eg);}
+function allTxns(){
+  const t=[];
+  for(const g of gl('gold')){
+    t.push({date:g.date,type:'Gold Loan Given',desc:`${g.bill} — ${g.cust}`,total:-g.loan,cash:-(+g.cg||0),sg:-(+g.sg||0),eg:-(+g.eg||0),dir:'out'});
+    if(g.stat==='Closed'&&g.rel)t.push({date:g.rel,type:'Gold Loan Closed',desc:`${g.bill} — ${g.cust}`,total:(+g.loan)+(+g.ir||0),cash:+(+g.rc||0),sg:+(+g.rs||0),eg:+(+g.re||0),dir:'in'});
+  }
+  for(const h of gl('hand')){
+    t.push({date:h.date,type:'Hand Loan Given',desc:`${h.bill} — ${h.cust}`,total:-h.loan,cash:-(+h.cg||0),sg:-(+h.sg||0),eg:-(+h.eg||0),dir:'out'});
+    if(h.stat==='Closed'&&h.repay)t.push({date:h.repay,type:'Hand Loan Closed',desc:`${h.bill} — ${h.cust}`,total:(+h.loan)+(+h.ir||0),cash:+(+h.rc||0),sg:+(+h.rs||0),eg:+(+h.re||0),dir:'in'});
+  }
+  for(const i of gl('inv'))t.push({date:i.date,type:'Investment',desc:i.part,total:+i.amt,cash:+(+i.ci||0),sg:+(+i.si||0),eg:+(+i.ei||0),dir:'in'});
+  for(const e of gl('exp'))t.push({date:e.date,type:'Expense',desc:e.name,total:-e.amt,cash:-(+e.co||0),sg:-(+e.so||0),eg:-(+e.eo||0),dir:'out'});
+  return t.sort((a,b)=>a.date.localeCompare(b.date));
+}
+function computeBal(upto=null){
+  let cash=+(CFG.obC||0),sg=+(CFG.obS||0),eg=+(CFG.obE||0);
+  for(const t of allTxns()){if(upto&&t.date>upto)continue;cash+=t.cash;sg+=t.sg;eg+=t.eg;}
+  return{cash,sg,eg,total:cash+sg+eg};
+}
+
+// ── DASHBOARD ──
+function renderAll(){renderDB();renderGold();renderHand();renderInv();renderExp();}
+function renderDB(){
+  const gold=gl('gold'),hand=gl('hand'),inv=gl('inv'),exp=gl('exp');
+  const og=gold.filter(x=>x.stat==='Open'),ogc=gold.filter(x=>x.stat==='Closed');
+  const oh=hand.filter(x=>x.stat==='Open'),ohc=hand.filter(x=>x.stat==='Closed');
+  const bal=computeBal();
+  const now=new Date();
+  $('dbDate').textContent=now.toLocaleDateString('en-IN',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
+  const totInv=inv.reduce((a,b)=>a+(+b.amt||0),0);
+  const totExp=exp.reduce((a,b)=>a+(+b.amt||0),0);
+  const netAmt=totInv-totExp;
+  const gOI=og.reduce((a,b)=>a+calcInt(b.loan,b.rate,b.date),0);
+  const gCI=ogc.reduce((a,b)=>a+(+b.ir||0),0);
+  const hOI=oh.reduce((a,b)=>a+calcInt(b.loan,b.rate,b.date),0);
+  const hCI=ohc.reduce((a,b)=>a+(+b.ir||0),0);
+
+  $('ahero').innerHTML=`
+    <div class="ahc"><div class="ahc-lbl">💵 Cash Balance</div><div class="ahc-val">${INR(bal.cash)}</div><div class="ahc-sub">Available cash</div></div>
+    <div class="ahc"><div class="ahc-lbl">🏦 SG Phone Pay</div><div class="ahc-val">${INR(bal.sg)}</div><div class="ahc-sub">Account balance</div></div>
+    <div class="ahc"><div class="ahc-lbl">🏦 EG Phone Pay</div><div class="ahc-val">${INR(bal.eg)}</div><div class="ahc-sub">Account balance</div></div>`;
+
+  $('scards').innerHTML=`
+    <div class="sc"><div class="sc-lbl">Total Investment</div><div class="sc-val y">${INR(totInv)}</div><div class="sc-sub">${inv.length} partners</div></div>
+    <div class="sc"><div class="sc-lbl">Total Expenses</div><div class="sc-val r">${INR(totExp)}</div><div class="sc-sub">${exp.length} entries</div></div>
+    <div class="sc"><div class="sc-lbl">Net Amount</div><div class="sc-val ${netAmt>=0?'gr':'r'}">${INR(netAmt)}</div><div class="sc-sub">Inv − Exp</div></div>
+    <div class="sc"><div class="sc-lbl">Shop Balance</div><div class="sc-val g">${INR(bal.total)}</div><div class="sc-sub">All accounts total</div></div>
+    <div class="sc"><div class="sc-lbl">Open Gold Bills</div><div class="sc-val y">${og.length}</div><div class="sc-sub">${INR(og.reduce((a,b)=>a+(+b.loan||0),0))}</div></div>
+    <div class="sc"><div class="sc-lbl">Open Hand Loans</div><div class="sc-val y">${oh.length}</div><div class="sc-sub">${INR(oh.reduce((a,b)=>a+(+b.loan||0),0))}</div></div>`;
+
+  $('dblocks').innerHTML=`
+    <div class="db"><div class="db-hd"><div class="db-dot" style="background:var(--y1)"></div><h3>Investments & Expenses</h3></div>
+      <div class="db-row"><span class="k">Total Invested Amount</span><span class="v y">${INR(totInv)}</span></div>
+      ${inv.map(i=>`<div class="db-row"><span class="k">&nbsp;&nbsp;${i.part}</span><span class="v">${INR(i.amt)}</span></div>`).join('')}
+      <div class="db-div"></div>
+      <div class="db-row"><span class="k">Total Expenses</span><span class="v r">${INR(totExp)}</span></div>
+      <div class="db-row" style="background:var(--gp)"><span class="k" style="font-weight:700;color:var(--txt)">Net Amount</span><span class="v ${netAmt>=0?'gr':'r'}" style="font-size:13px">${INR(netAmt)}</span></div>
+      <div class="db-row"><span class="k">Balance in Shop</span><span class="v g">${INR(bal.total)}</span></div>
+    </div>
+    <div class="db"><div class="db-hd"><div class="db-dot" style="background:var(--g2)"></div><h3>Gold Loan Transactions</h3></div>
+      <div class="db-row"><span class="k">Total Bills (Open)</span><span class="v y">${og.length}</span></div>
+      <div class="db-row"><span class="k">Total Amount (Open)</span><span class="v">${INR(og.reduce((a,b)=>a+(+b.loan||0),0))}</span></div>
+      <div class="db-row"><span class="k">Interest Due (Open)</span><span class="v gr">${INR(gOI)}</span></div>
+      <div class="db-div"></div>
+      <div class="db-row"><span class="k">Total Bills (Closed)</span><span class="v">${ogc.length}</span></div>
+      <div class="db-row"><span class="k">Interest Earned (Closed)</span><span class="v gr">${INR(gCI)}</span></div>
+    </div>
+    <div class="db"><div class="db-hd"><div class="db-dot" style="background:var(--b1)"></div><h3>Hand Loan Transactions</h3></div>
+      <div class="db-row"><span class="k">Outside Amount (Open)</span><span class="v y">${INR(oh.reduce((a,b)=>a+(+b.loan||0),0))}</span></div>
+      <div class="db-row"><span class="k">Interest Due (Open)</span><span class="v gr">${INR(hOI)}</span></div>
+      <div class="db-div"></div>
+      <div class="db-row"><span class="k">Total Loans (Closed)</span><span class="v">${ohc.length}</span></div>
+      <div class="db-row"><span class="k">Interest Earned (Closed)</span><span class="v gr">${INR(hCI)}</span></div>
+    </div>`;
+
+  $('dgold').innerHTML=gold.slice(-5).reverse().map(x=>`<tr><td><strong>${x.bill}</strong></td><td>${x.cust}</td><td>${INR(x.loan)}</td><td><span class="badge ${x.stat==='Open'?'bo':'bc'}">${x.stat}</span></td></tr>`).join('')||`<tr><td colspan="4" class="nd">No records</td></tr>`;
+  $('dhand').innerHTML=hand.slice(-5).reverse().map(x=>`<tr><td><strong>${x.bill}</strong></td><td>${x.cust}</td><td>${INR(x.loan)}</td><td><span class="badge ${x.stat==='Open'?'bo':'bc'}">${x.stat}</span></td></tr>`).join('')||`<tr><td colspan="4" class="nd">No records</td></tr>`;
+}
+
+// ── GOLD LOANS ──
+function renderGold(f=''){
+  let rows=gl('gold');
+  if(f)rows=rows.filter(x=>(x.cust||'').toLowerCase().includes(f.toLowerCase())||(x.bill||'').toLowerCase().includes(f.toLowerCase()));
+  $('goldTbl').innerHTML=rows.map((x,i)=>{
+    const int=x.stat==='Open'?calcInt(x.loan,x.rate,x.date):(+x.ir||0);
+    return`<tr><td>${i+1}</td><td><strong>${x.bill}</strong></td><td>${toDMY(x.date)}</td><td>${x.cust}</td><td>${x.phone}</td><td>${x.items}</td><td>${x.nw}g</td><td>${INR(x.loan)}</td><td>${x.rate}%</td><td style="color:var(--g2);font-weight:600">${INR(int)}</td><td>${INR(x.cg)}</td><td>${INR(x.sg)}</td><td>${INR(x.eg)}</td><td><span class="badge ${x.stat==='Open'?'bo':'bc'}">${x.stat}</span></td><td><div style="display:flex;gap:4px"><button class="btn btn-b btn-sm" onclick="editGold(${x.id})">Edit</button><button class="btn btn-r btn-sm" onclick="del('gold',${x.id})">Del</button></div></td></tr>`;
+  }).join('')||`<tr><td colspan="15" class="nd">No gold loans. Use End of Day Entry or + New Bill.</td></tr>`;
+}
+function openGM(){clearGF();openM('gModal');}
+function clearGF(){
+  $('gId').value='';$('gMT').textContent='New Gold Loan Bill';
+  ['gBill','gAddr','gItems','gCust','gPhone','gGW','gNW','gRD','gIR','gRC','gRS','gRE','gLoan','gCash','gSG','gEG'].forEach(id=>{if($(id))$(id).value='';});
+  $('gDate').value=todayISO();$('gRate').value='1.5';$('gStat').value='Open';tGC();
+}
+function tGC(){$('gCD').style.display=$('gStat').value==='Closed'?'block':'none';}
+function tHC(){$('hCD').style.display=$('hStat').value==='Closed'?'block':'none';}
+function updS(p){
+  const m={g:{t:'gLoan',s:'gSG',e:'gEG',r:'gRem'},h:{t:'hLoan',s:'hSG',e:'hEG',r:'hRem'},i:{t:'iAmt',s:'iSG',e:'iEG',r:'iRem'},e:{t:'eAmt',s:'eSG',e:'eEG',r:'eRem'}};
+  const x=m[p];if(!x)return;
+  $(x.r).textContent=`Cash auto: ${INR(autoCash(n(x.t),n(x.s),n(x.e)))}`;
+}
+function updCS(p){
+  const m={g:{l:'gLoan',i:'gIR',s:'gRS',e:'gRE',r:'gRRem'},h:{l:'hLoan',i:'hIR',s:'hRS',e:'hRE',r:'hRRem'}};
+  const x=m[p];if(!x)return;
+  $(x.r).textContent=`Cash auto: ${INR(autoCash(n(x.l)+n(x.i),n(x.s),n(x.e)))}`;
+}
+function editGold(xid){
+  const x=gl('gold').find(r=>r.id===xid);if(!x)return;
+  $('gId').value=x.id;$('gMT').textContent='Edit Gold Loan';
+  $('gBill').value=x.bill;$('gDate').value=x.date;$('gCust').value=x.cust;$('gPhone').value=x.phone;$('gAddr').value=x.addr||'';$('gItems').value=x.items;$('gGW').value=x.gw;$('gNW').value=x.nw;$('gLoan').value=x.loan;$('gRate').value=x.rate;$('gStat').value=x.stat;
+  $('gCash').value=x.cg||'';$('gSG').value=x.sg||'';$('gEG').value=x.eg||'';
+  $('gRD').value=x.rel||'';$('gIR').value=x.ir||'';$('gRC').value=x.rc||'';$('gRS').value=x.rs||'';$('gRE').value=x.re||'';
+  tGC();openM('gModal');
+}
+function saveGold(){
+  const eid=$('gId').value;
+  const loan=n('gLoan'),sg=n('gSG'),eg=n('gEG'),cash=n('gCash')||autoCash(loan,sg,eg);
+  const rLoan=n('gLoan'),rInt=n('gIR'),rSG=n('gRS'),rEG=n('gRE'),rCash=n('gRC')||autoCash(rLoan+rInt,rSG,rEG);
+  const obj={id:eid?+eid:nid(gl('gold')),bill:v('gBill').trim(),date:v('gDate'),cust:v('gCust').trim(),addr:v('gAddr').trim(),phone:v('gPhone').trim(),items:v('gItems').trim(),gw:n('gGW'),nw:n('gNW'),loan,rate:n('gRate')||1.5,stat:v('gStat'),cg:cash,sg,eg,rel:v('gRD'),ir:n('gIR'),rc:rCash,rs:rSG,re:rEG};
+  if(!obj.bill||!obj.cust)return toast('Fill Bill No and Customer Name','err');
+  let data=gl('gold');if(eid)data=data.map(r=>r.id===+eid?obj:r);else data.push(obj);
+  sl('gold',data);closeM('gModal');renderGold();renderDB();toast('Gold loan saved!','ok');
+}
+
+// ── HAND LOANS ──
+function renderHand(f=''){
+  let rows=gl('hand');
+  if(f)rows=rows.filter(x=>(x.cust||'').toLowerCase().includes(f.toLowerCase())||(x.bill||'').toLowerCase().includes(f.toLowerCase()));
+  $('handTbl').innerHTML=rows.map((x,i)=>{
+    const int=x.stat==='Open'?calcInt(x.loan,x.rate,x.date):(+x.ir||0);
+    return`<tr><td>${i+1}</td><td><strong>${x.bill}</strong></td><td>${toDMY(x.date)}</td><td>${x.cust}</td><td>${x.phone}</td><td>${INR(x.loan)}</td><td>${x.rate}%</td><td style="color:var(--g2);font-weight:600">${INR(int)}</td><td>${INR(x.cg)}</td><td>${INR(x.sg)}</td><td>${INR(x.eg)}</td><td>${toDMY(x.repay)||'-'}</td><td><span class="badge ${x.stat==='Open'?'bo':'bc'}">${x.stat}</span></td><td><div style="display:flex;gap:4px"><button class="btn btn-b btn-sm" onclick="editHand(${x.id})">Edit</button><button class="btn btn-r btn-sm" onclick="del('hand',${x.id})">Del</button></div></td></tr>`;
+  }).join('')||`<tr><td colspan="14" class="nd">No hand loans found.</td></tr>`;
+}
+function openHM(){
+  ['hId','hBill','hCust','hPhone','hRD2','hRelD','hIR','hRC','hRS','hRE','hLoan','hCash','hSG','hEG'].forEach(id=>{if($(id))$(id).value='';});
+  $('hMT').textContent='New Hand Loan';$('hDate').value=todayISO();$('hRate').value='1.5';$('hStat').value='Open';tHC();openM('hModal');
+}
+function editHand(xid){
+  const x=gl('hand').find(r=>r.id===xid);if(!x)return;
+  $('hId').value=x.id;$('hMT').textContent='Edit Hand Loan';
+  $('hBill').value=x.bill;$('hDate').value=x.date;$('hCust').value=x.cust;$('hPhone').value=x.phone;$('hLoan').value=x.loan;$('hRate').value=x.rate;$('hStat').value=x.stat;$('hRD2').value=x.repay||'';
+  $('hCash').value=x.cg||'';$('hSG').value=x.sg||'';$('hEG').value=x.eg||'';
+  $('hRelD').value=x.repay||'';$('hIR').value=x.ir||'';$('hRC').value=x.rc||'';$('hRS').value=x.rs||'';$('hRE').value=x.re||'';
+  tHC();openM('hModal');
+}
+function saveHand(){
+  const eid=$('hId').value;
+  const loan=n('hLoan'),sg=n('hSG'),eg=n('hEG'),cash=n('hCash')||autoCash(loan,sg,eg);
+  const rLoan=n('hLoan'),rInt=n('hIR'),rSG=n('hRS'),rEG=n('hRE'),rCash=n('hRC')||autoCash(rLoan+rInt,rSG,rEG);
+  const obj={id:eid?+eid:nid(gl('hand')),bill:v('hBill').trim(),date:v('hDate'),cust:v('hCust').trim(),phone:v('hPhone').trim(),loan,rate:n('hRate')||1.5,stat:v('hStat'),repay:v('hRelD')||v('hRD2'),cg:cash,sg,eg,ir:n('hIR'),rc:rCash,rs:rSG,re:rEG};
+  if(!obj.bill||!obj.cust)return toast('Fill Bill No and Customer Name','err');
+  let data=gl('hand');if(eid)data=data.map(r=>r.id===+eid?obj:r);else data.push(obj);
+  sl('hand',data);closeM('hModal');renderHand();renderDB();toast('Hand loan saved!','ok');
+}
+
+// ── INVESTMENTS ──
+function renderInv(){$('invTbl').innerHTML=gl('inv').map((x,i)=>`<tr><td>${i+1}</td><td>${toDMY(x.date)}</td><td>${x.part}</td><td>${INR(x.amt)}</td><td>${INR(x.ci)}</td><td>${INR(x.si)}</td><td>${INR(x.ei)}</td><td><span class="badge bi">${x.stat}</span></td><td>${x.cmt||'-'}</td><td><div style="display:flex;gap:4px"><button class="btn btn-b btn-sm" onclick="editInv(${x.id})">Edit</button><button class="btn btn-r btn-sm" onclick="del('inv',${x.id})">Del</button></div></td></tr>`).join('')||`<tr><td colspan="10" class="nd">No investments.</td></tr>`;}
+function openIM(){['iId','iPart','iAmt','iCmt','iCash','iSG','iEG'].forEach(id=>{if($(id))$(id).value='';}); $('iDate').value=todayISO();$('iStat').value='Open';openM('iModal');}
+function editInv(xid){const x=gl('inv').find(r=>r.id===xid);if(!x)return;$('iId').value=x.id;$('iDate').value=x.date;$('iPart').value=x.part;$('iAmt').value=x.amt;$('iStat').value=x.stat;$('iCmt').value=x.cmt||'';$('iCash').value=x.ci||'';$('iSG').value=x.si||'';$('iEG').value=x.ei||'';openM('iModal');}
+function saveInv(){
+  const eid=$('iId').value,amt=n('iAmt'),sg=n('iSG'),eg=n('iEG'),cash=n('iCash')||autoCash(amt,sg,eg);
+  const obj={id:eid?+eid:nid(gl('inv')),date:v('iDate'),part:v('iPart').trim(),amt,stat:v('iStat'),cmt:v('iCmt').trim(),ci:cash,si:sg,ei:eg};
+  if(!obj.part||!obj.amt)return toast('Fill Partner and Amount','err');
+  let data=gl('inv');if(eid)data=data.map(r=>r.id===+eid?obj:r);else data.push(obj);
+  sl('inv',data);closeM('iModal');renderInv();renderDB();toast('Investment saved!','ok');
+}
+
+// ── EXPENSES ──
+function renderExp(){$('expTbl').innerHTML=gl('exp').map((x,i)=>`<tr><td>${i+1}</td><td>${toDMY(x.date)}</td><td>${x.name}</td><td>${INR(x.amt)}</td><td>${INR(x.co)}</td><td>${INR(x.so)}</td><td>${INR(x.eo)}</td><td>${x.cmt||'-'}</td><td><div style="display:flex;gap:4px"><button class="btn btn-b btn-sm" onclick="editExp(${x.id})">Edit</button><button class="btn btn-r btn-sm" onclick="del('exp',${x.id})">Del</button></div></td></tr>`).join('')||`<tr><td colspan="9" class="nd">No expenses.</td></tr>`;}
+function openEM(){['eId','eName','eAmt','eCmt','eCash','eSG','eEG'].forEach(id=>{if($(id))$(id).value='';}); $('eDate').value=todayISO();openM('eModal');}
+function editExp(xid){const x=gl('exp').find(r=>r.id===xid);if(!x)return;$('eId').value=x.id;$('eDate').value=x.date;$('eName').value=x.name;$('eAmt').value=x.amt;$('eCmt').value=x.cmt||'';$('eCash').value=x.co||'';$('eSG').value=x.so||'';$('eEG').value=x.eo||'';openM('eModal');}
+function saveExp(){
+  const eid=$('eId').value,amt=n('eAmt'),sg=n('eSG'),eg=n('eEG'),cash=n('eCash')||autoCash(amt,sg,eg);
+  const obj={id:eid?+eid:nid(gl('exp')),date:v('eDate'),name:v('eName').trim(),amt,cmt:v('eCmt').trim(),co:cash,so:sg,eo:eg};
+  if(!obj.name||!obj.amt)return toast('Fill Name and Amount','err');
+  let data=gl('exp');if(eid)data=data.map(r=>r.id===+eid?obj:r);else data.push(obj);
+  sl('exp',data);closeM('eModal');renderExp();renderDB();toast('Expense saved!','ok');
+}
+
+function del(t,xid){if(!confirm('Delete this record? This cannot be undone.'))return;sl(t,gl(t).filter(r=>r.id!==xid));renderAll();toast('Record deleted.');}
+
+// ── BULK ENTRY ──
+function addBR(type){
+  const maps={g:'bGold',h:'bHand',gc:'bGC',hc:'bHC',e:'bExp',i:'bInv'};
+  const cont=$(maps[type]);
+  const rid='r'+Date.now();
+  const bi=(ph,tp='text')=>`<input class="bi2" type="${tp}" placeholder="${ph}" oninput="calcImpact()">`;
+  const bn=ph=>`<input class="bi2" type="number" placeholder="${ph}" oninput="calcImpact()">`;
+  const rm=`<button class="rmb" onclick="document.getElementById('${rid}').remove();calcImpact()">×</button>`;
+  let html='';
+  if(type==='g')  html=`<div class="bf gf" id="${rid}">${bi('A-0X')}${bi('Date','date')}${bi('Name|Phone|Addr|Items')}${bn('Loan Amt')}${bn('GrWt')}${bn('NtWt')}${bn('1.5')}${bn('SG Phone')}${bn('EG Phone')}${rm}</div>`;
+  else if(type==='h') html=`<div class="bf hf" id="${rid}">${bi('H-0X')}${bi('Date','date')}${bi('Name|Phone')}${bn('Loan Amt')}${bn('1.5')}${bn('SG Phone')}${bn('EG Phone')}${rm}</div>`;
+  else if(type==='gc'||type==='hc') html=`<div class="bf clf" id="${rid}">${bi('Bill No')}${bi('Customer Name')}${bn('Loan Amount')}${bn('Interest Recd')}${bn('SG Phone')}${bn('EG Phone')}${rm}</div>`;
+  else if(type==='e'||type==='i') html=`<div class="bf eif" id="${rid}">${bi(type==='e'?'Expense Name':'Partner Name')}${bn('Amount')}${bn('Cash')}${bn('SG Phone')}${bn('EG Phone')}${rm}</div>`;
+  cont.insertAdjacentHTML('beforeend',html);
+  const newEl=$(rid);
+  newEl.querySelectorAll('input[type=date]').forEach(el=>el.value=v('bulkDate')||todayISO());
+}
+
+function calcImpact(){
+  let cash=0,sg=0,eg=0;
+  document.querySelectorAll('#bGold .bf').forEach(row=>{
+    const ins=[...row.querySelectorAll('input')];
+    const loan=+ins[3]?.value||0,sgv=+ins[7]?.value||0,egv=+ins[8]?.value||0;
+    cash-=autoCash(loan,sgv,egv);sg-=sgv;eg-=egv;
+  });
+  document.querySelectorAll('#bHand .bf').forEach(row=>{
+    const ins=[...row.querySelectorAll('input')];
+    const loan=+ins[3]?.value||0,sgv=+ins[5]?.value||0,egv=+ins[6]?.value||0;
+    cash-=autoCash(loan,sgv,egv);sg-=sgv;eg-=egv;
+  });
+  document.querySelectorAll('#bGC .bf,#bHC .bf').forEach(row=>{
+    const ins=[...row.querySelectorAll('input')];
+    const loan=+ins[2]?.value||0,int=+ins[3]?.value||0,sgv=+ins[4]?.value||0,egv=+ins[5]?.value||0;
+    const cv=autoCash(loan+int,sgv,egv);cash+=cv;sg+=sgv;eg+=egv;
+  });
+  document.querySelectorAll('#bExp .bf').forEach(row=>{
+    const ins=[...row.querySelectorAll('input')];
+    const amt=+ins[1]?.value||0,cv=+ins[2]?.value||0,sgv=+ins[3]?.value||0,egv=+ins[4]?.value||0;
+    const ac=cv||autoCash(amt,sgv,egv);cash-=ac;sg-=sgv;eg-=egv;
+  });
+  document.querySelectorAll('#bInv .bf').forEach(row=>{
+    const ins=[...row.querySelectorAll('input')];
+    const amt=+ins[1]?.value||0,cv=+ins[2]?.value||0,sgv=+ins[3]?.value||0,egv=+ins[4]?.value||0;
+    const ac=cv||autoCash(amt,sgv,egv);cash+=ac;sg+=sgv;eg+=egv;
+  });
+  const fmt=val=>{const c=val>0?'pos':val<0?'neg':'neu';return`<span class="${c}">${val>0?'+':''}${INR(val)}</span>`;};
+  $('impC').innerHTML=fmt(cash);$('impS').innerHTML=fmt(sg);$('impE').innerHTML=fmt(eg);
+}
+
+function saveBulk(){
+  const bdate=v('bulkDate')||todayISO();
+  let saved=0;
+  // Gold Given
+  document.querySelectorAll('#bGold .bf').forEach(row=>{
+    const ins=[...row.querySelectorAll('input')];
+    const bill=ins[0]?.value.trim();const dt=ins[1]?.value||bdate;
+    const raw=ins[2]?.value||'';const pts=raw.split('|');
+    const cust=(pts[0]||'').trim(),phone=(pts[1]||'').trim(),addr=(pts[2]||'').trim(),items=(pts[3]||'').trim();
+    const loan=+ins[3]?.value||0,gw=+ins[4]?.value||0,nw=+ins[5]?.value||0,rate=+ins[6]?.value||1.5;
+    const sgv=+ins[7]?.value||0,egv=+ins[8]?.value||0;
+    if(!bill||!cust||!loan)return;
+    const d=gl('gold');d.push({id:nid(d),bill,date:dt,cust,addr,phone,items,gw,nw,loan,rate,stat:'Open',cg:autoCash(loan,sgv,egv),sg:sgv,eg:egv,rel:'',ir:0,rc:0,rs:0,re:0});sl('gold',d);saved++;
+  });
+  // Hand Given
+  document.querySelectorAll('#bHand .bf').forEach(row=>{
+    const ins=[...row.querySelectorAll('input')];
+    const bill=ins[0]?.value.trim();const dt=ins[1]?.value||bdate;
+    const raw=ins[2]?.value||'';const pts=raw.split('|');
+    const cust=(pts[0]||'').trim(),phone=(pts[1]||'').trim();
+    const loan=+ins[3]?.value||0,rate=+ins[4]?.value||1.5;
+    const sgv=+ins[5]?.value||0,egv=+ins[6]?.value||0;
+    if(!bill||!cust||!loan)return;
+    const d=gl('hand');d.push({id:nid(d),bill,date:dt,cust,phone,loan,rate,stat:'Open',repay:'',cg:autoCash(loan,sgv,egv),sg:sgv,eg:egv,ir:0,rc:0,rs:0,re:0});sl('hand',d);saved++;
+  });
+  // Gold + Hand Closed
+  [['#bGC','gold'],['#bHC','hand']].forEach(([sel,key])=>{
+    document.querySelectorAll(`${sel} .bf`).forEach(row=>{
+      const ins=[...row.querySelectorAll('input')];
+      const billNo=ins[0]?.value.trim(),custName=ins[1]?.value.trim();
+      const loanAmt=+ins[2]?.value||0,interest=+ins[3]?.value||0;
+      const sgv=+ins[4]?.value||0,egv=+ins[5]?.value||0,cashv=autoCash(loanAmt+interest,sgv,egv);
+      if(!billNo)return;
+      const d=gl(key);
+      const idx=d.findIndex(x=>x.bill.toLowerCase()===billNo.toLowerCase());
+      if(idx>=0){d[idx]={...d[idx],stat:'Closed',rel:bdate,repay:bdate,ir:interest,rc:cashv,rs:sgv,re:egv};}
+      else{const newR={id:nid(d),bill:billNo,date:bdate,cust:custName||billNo,phone:'',loan:loanAmt,rate:1.5,stat:'Closed',cg:0,sg:0,eg:0,ir:interest,rc:cashv,rs:sgv,re:egv};if(key==='gold')Object.assign(newR,{addr:'',items:'',gw:0,nw:0,rel:bdate});else newR.repay=bdate;d.push(newR);}
+      sl(key,d);saved++;
+    });
+  });
+  // Expenses
+  document.querySelectorAll('#bExp .bf').forEach(row=>{
+    const ins=[...row.querySelectorAll('input')];
+    const name=ins[0]?.value.trim(),amt=+ins[1]?.value||0;
+    const cv=+ins[2]?.value||0,sgv=+ins[3]?.value||0,egv=+ins[4]?.value||0;
+    if(!name||!amt)return;
+    const d=gl('exp');d.push({id:nid(d),date:bdate,name,amt,cmt:'',co:cv||autoCash(amt,sgv,egv),so:sgv,eo:egv});sl('exp',d);saved++;
+  });
+  // Investments
+  document.querySelectorAll('#bInv .bf').forEach(row=>{
+    const ins=[...row.querySelectorAll('input')];
+    const part=ins[0]?.value.trim(),amt=+ins[1]?.value||0;
+    const cv=+ins[2]?.value||0,sgv=+ins[3]?.value||0,egv=+ins[4]?.value||0;
+    if(!part||!amt)return;
+    const d=gl('inv');d.push({id:nid(d),date:bdate,part,amt,stat:'Open',cmt:'',ci:cv||autoCash(amt,sgv,egv),si:sgv,ei:egv});sl('inv',d);saved++;
+  });
+  if(!saved)return toast('Nothing to save — fill at least one row','err');
+  clearBulk();renderAll();toast(`✅ ${saved} transaction${saved>1?'s':''} saved successfully!`,'ok');
+}
+
+function clearBulk(){
+  ['bGold','bHand','bGC','bHC','bExp','bInv'].forEach(id=>$(id).innerHTML='');
+  $('impC').innerHTML=$('impS').innerHTML=$('impE').innerHTML='<span class="neu">₹0</span>';
+  addBR('g');addBR('h');addBR('gc');addBR('hc');addBR('e');addBR('i');
+}
+
+// ── LEDGER ──
+function renderLed(){
+  const from=v('lf'),to=v('lt');if(!from||!to)return;
+  const prev=new Date(from);prev.setDate(prev.getDate()-1);const prevStr=prev.toISOString().split('T')[0];
+  const ob=computeBal(prevStr);
+  const txns=allTxns().filter(t=>t.date>=from&&t.date<=to);
+  const cb={cash:ob.cash+txns.reduce((a,t)=>a+t.cash,0),sg:ob.sg+txns.reduce((a,t)=>a+t.sg,0),eg:ob.eg+txns.reduce((a,t)=>a+t.eg,0)};
+  cb.total=cb.cash+cb.sg+cb.eg;
+  const balBlock=(title,b)=>`<div class="lb"><div class="lb-t">${title} &nbsp;<span style="color:var(--txt3);font-weight:400">Total: ${INR(b.total)}</span></div>
+    <div class="lb-g">
+      <div class="lbc"><div class="lbc-l">💵 Cash</div><div class="lbc-v">${INR(b.cash)}</div></div>
+      <div class="lbc"><div class="lbc-l">🏦 SG Phone</div><div class="lbc-v">${INR(b.sg)}</div></div>
+      <div class="lbc"><div class="lbc-l">🏦 EG Phone</div><div class="lbc-v">${INR(b.eg)}</div></div>
+      <div class="lbc"><div class="lbc-l">Total</div><div class="lbc-v tot">${INR(b.total)}</div></div>
+    </div></div>`;
+  const rows=txns.length?txns.map(t=>`<div class="txi">
+    <span style="color:var(--txt3)">${toDMY(t.date)}</span>
+    <span class="txdir ${t.dir}">${t.dir==='in'?'▲ IN':'▼ OUT'}</span>
+    <span><div style="font-size:11px;color:var(--txt)">${t.type}</div><div style="font-size:9px;color:var(--txt3)">${t.desc}</div></span>
+    <span class="amc ${t.dir==='in'?'pos':'neg'}">${t.dir==='in'?'+':'-'}${INR(Math.abs(t.total))}</span>
+    <span class="amc ${t.cash===0?'neu':t.cash>0?'pos':'neg'}">${t.cash===0?'—':(t.cash>0?'+':'')+INR(t.cash)}</span>
+    <span class="amc ${t.sg===0?'neu':t.sg>0?'pos':'neg'}">${t.sg===0?'—':(t.sg>0?'+':'')+INR(t.sg)}</span>
+    <span class="amc ${t.eg===0?'neu':t.eg>0?'pos':'neg'}">${t.eg===0?'—':(t.eg>0?'+':'')+INR(t.eg)}</span>
+  </div>`).join(''):`<div class="nd">No transactions in this date range.</div>`;
+  const net=cb.total-ob.total;
+  $('ledOut').innerHTML=`
+    ${balBlock(`Opening Balance — ${toDMY(from)}`,ob)}
+    <div class="txl">
+      <div class="txi txhdr"><span>Date</span><span>Dir</span><span>Description</span><span>Total</span><span>Cash</span><span>SG Phone</span><span>EG Phone</span></div>
+      ${rows}
+    </div>
+    ${balBlock(`Closing Balance — ${toDMY(to)}`,cb)}
+    <div class="ls">
+      <div class="ls-i"><label>Net Change</label><span style="color:${net>=0?'var(--g2)':'var(--r1)'}">${net>=0?'+':''}${INR(net)}</span></div>
+      <div class="ls-i"><label>Total IN</label><span style="color:var(--g2)">${INR(txns.filter(t=>t.dir==='in').reduce((a,t)=>a+Math.abs(t.total),0))}</span></div>
+      <div class="ls-i"><label>Total OUT</label><span style="color:var(--r1)">${INR(txns.filter(t=>t.dir==='out').reduce((a,t)=>a+Math.abs(t.total),0))}</span></div>
+      <div class="ls-i"><label>Transactions</label><span>${txns.length}</span></div>
+    </div>`;
+}
+
+// ── ACCOUNTS ──
+function renderAcc(){
+  const from=v('af'),to=v('at');
+  const bal=computeBal();
+  $('accCards').innerHTML=`
+    <div class="ahc"><div class="ahc-lbl">💵 Cash</div><div class="ahc-val">${INR(bal.cash)}</div><div class="ahc-sub">Current balance</div></div>
+    <div class="ahc"><div class="ahc-lbl">🏦 SG Phone Pay</div><div class="ahc-val">${INR(bal.sg)}</div><div class="ahc-sub">Current balance</div></div>
+    <div class="ahc"><div class="ahc-lbl">🏦 EG Phone Pay</div><div class="ahc-val">${INR(bal.eg)}</div><div class="ahc-sub">Current balance</div></div>`;
+  const txns=allTxns().filter(t=>(!from||t.date>=from)&&(!to||t.date<=to));
+  $('accTbl').innerHTML=txns.length?txns.map(t=>`<tr>
+    <td>${toDMY(t.date)}</td><td>${t.type}</td><td>${t.desc}</td>
+    <td style="font-weight:700;color:${t.dir==='in'?'var(--g1)':'var(--r1)'}">${t.dir==='in'?'+':'-'}${INR(Math.abs(t.total))}</td>
+    <td style="color:${t.cash===0?'var(--txt4)':t.cash>0?'var(--g1)':'var(--r1)'}">${t.cash===0?'—':(t.cash>0?'+':'')+INR(t.cash)}</td>
+    <td style="color:${t.sg===0?'var(--txt4)':t.sg>0?'var(--g1)':'var(--r1)'}">${t.sg===0?'—':(t.sg>0?'+':'')+INR(t.sg)}</td>
+    <td style="color:${t.eg===0?'var(--txt4)':t.eg>0?'var(--g1)':'var(--r1)'}">${t.eg===0?'—':(t.eg>0?'+':'')+INR(t.eg)}</td>
+    <td><span class="badge ${t.dir==='in'?'bi':'bx'}">${t.dir==='in'?'IN':'OUT'}</span></td>
+  </tr>`).join(''):`<tr><td colspan="8" class="nd">No transactions in this range.</td></tr>`;
+}
+
+// ── IMPORT ──
+function handleDrop(e){e.preventDefault();$('dropZone').classList.remove('drag');const f=e.dataTransfer.files[0];if(f)handleFile(f);}
+function handleFile(file){
+  if(!file||!file.name.endsWith('.xlsx'))return toast('Please upload a .xlsx file','err');
+  const reader=new FileReader();
+  reader.onload=e=>{
+    try{
+      const wb=XLSX.read(e.target.result,{type:'array'});
+      let imported={gold:0,hand:0,inv:0,exp:0};
+      const sheetMap={'Gold Loans':'gold','Hand Loans':'hand','Investments':'inv','Expenses':'exp'};
+      for(const[shName,key] of Object.entries(sheetMap)){
+        const ws=wb.Sheets[shName];if(!ws)continue;
+        const rows=XLSX.utils.sheet_to_json(ws,{header:1,defval:''});
+        if(rows.length<3)continue;
+        const existing=gl(key);
+        // skip rows 0(title),1(header),2(hints),then from row 3 onwards
+        for(let i=3;i<rows.length;i++){
+          const r=rows[i];
+          if(!r[0]&&!r[1])continue;
+          const dateStr=r[1]?toISO(r[1].toString().trim()):'';
+          if(key==='gold'){
+            const loan=+r[8]||0,sg=+r[14]||0,eg=+r[15]||0,cash=+r[13]||autoCash(loan,sg,eg);
+            const rel=r[11]?toISO(r[11].toString().trim()):'';
+            const rSG=+r[17]||0,rEG=+r[18]||0,rCash=+r[16]||autoCash((+r[8]||0)+(+r[12]||0),rSG,rEG);
+            existing.push({id:nid(existing),bill:String(r[0]).trim(),date:dateStr,cust:String(r[2]).trim(),addr:String(r[3]).trim(),phone:String(r[4]).trim(),items:String(r[5]).trim(),gw:+r[6]||0,nw:+r[7]||0,loan,rate:+r[9]||1.5,stat:String(r[10]).trim()||'Open',cg:cash,sg,eg,rel,ir:+r[12]||0,rc:rCash,rs:rSG,re:rEG});imported.gold++;
+          }else if(key==='hand'){
+            const loan=+r[4]||0,sg=+r[10]||0,eg=+r[11]||0,cash=+r[9]||autoCash(loan,sg,eg);
+            const rep=r[7]?toISO(r[7].toString().trim()):'';
+            const rSG=+r[13]||0,rEG=+r[14]||0,rCash=+r[12]||autoCash((+r[4]||0)+(+r[8]||0),rSG,rEG);
+            existing.push({id:nid(existing),bill:String(r[0]).trim(),date:dateStr,cust:String(r[2]).trim(),phone:String(r[3]).trim(),loan,rate:+r[5]||1.5,stat:String(r[6]).trim()||'Open',repay:rep,cg:cash,sg,eg,ir:+r[8]||0,rc:rCash,rs:rSG,re:rEG});imported.hand++;
+          }else if(key==='inv'){
+            const amt=+r[2]||0,sg=+r[5]||0,eg=+r[6]||0,cash=+r[4]||autoCash(amt,sg,eg);
+            existing.push({id:nid(existing),date:dateStr,part:String(r[1]).trim(),amt,stat:String(r[3]).trim()||'Open',cmt:String(r[7]).trim(),ci:cash,si:sg,ei:eg});imported.inv++;
+          }else if(key==='exp'){
+            const amt=+r[2]||0,sg=+r[4]||0,eg=+r[5]||0,cash=+r[3]||autoCash(amt,sg,eg);
+            existing.push({id:nid(existing),date:dateStr,name:String(r[1]).trim(),amt,cmt:String(r[6]).trim(),co:cash,so:sg,eo:eg});imported.exp++;
+          }
+          sl(key,existing);
+        }
+      }
+      const total=imported.gold+imported.hand+imported.inv+imported.exp;
+      $('impResult').style.display='block';
+      $('impResult').innerHTML=`<div style="font-size:12px;font-weight:700;color:var(--g1);margin-bottom:8px">✅ Import Complete — ${total} records loaded</div>
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:7px;font-size:12px">
+          <div>🥇 Gold Loans: <strong>${imported.gold}</strong></div>
+          <div>🤝 Hand Loans: <strong>${imported.hand}</strong></div>
+          <div>📈 Investments: <strong>${imported.inv}</strong></div>
+          <div>🧾 Expenses: <strong>${imported.exp}</strong></div>
+        </div>`;
+      renderAll();toast(`✅ ${total} records imported!`,'ok');
+    }catch(err){toast('Error reading file. Make sure it is the MFinance Import Template.','err');console.error(err);}
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+// ── BACKUP & EXPORT ──
+function updateCounts(){
+  const g=gl('gold').length,h=gl('hand').length,inv=gl('inv').length,ex=gl('exp').length;
+  $('goldCnt').textContent=`${g} record${g!==1?'s':''}`;
+  $('handCnt').textContent=`${h} record${h!==1?'s':''}`;
+  $('invCnt').textContent=`${inv} record${inv!==1?'s':''}`;
+  $('expCnt').textContent=`${ex} record${ex!==1?'s':''}`;
+  $('totalCount').textContent=`${g+h+inv+ex} records across all sections`;
+}
+
+function exportAll(){
+  const wb=XLSX.utils.book_new();
+  buildGoldSheet(wb);buildHandSheet(wb);buildInvSheet(wb);buildExpSheet(wb);
+  const dt=new Date().toISOString().slice(0,10);
+  XLSX.writeFile(wb,`MFinance_Backup_${dt}.xlsx`);
+  toast('✅ Full backup downloaded!','ok');
+}
+
+function exportSheet(key){
+  const wb=XLSX.utils.book_new();
+  if(key==='gold')buildGoldSheet(wb);
+  else if(key==='hand')buildHandSheet(wb);
+  else if(key==='inv')buildInvSheet(wb);
+  else if(key==='exp')buildExpSheet(wb);
+  const dt=new Date().toISOString().slice(0,10);
+  const names={gold:'Gold_Loans',hand:'Hand_Loans',inv:'Investments',exp:'Expenses'};
+  XLSX.writeFile(wb,`MFinance_${names[key]}_${dt}.xlsx`);
+  toast(`✅ ${names[key]} exported!`,'ok');
+}
+
+function buildGoldSheet(wb){
+  const headers=['Bill No','Bill Date','Customer Name','Customer Address','Phone Number','Items Pledged','Gross Weight (g)','Net Weight (g)','Loan Amount (₹)','Interest Rate (%/month)','Status','Release Date','Interest Received (₹)','Cash Given (₹)','SG Phone Pay Given (₹)','EG Phone Pay Given (₹)','Cash Received Back (₹)','SG Phone Received (₹)','EG Phone Received (₹)'];
+  const rows=gl('gold').map(x=>[x.bill,toDMY(x.date),x.cust,x.addr,x.phone,x.items,x.gw,x.nw,x.loan,x.rate,x.stat,toDMY(x.rel)||'',x.ir||0,x.cg||0,x.sg||0,x.eg||0,x.rc||0,x.rs||0,x.re||0]);
+  const ws=XLSX.utils.aoa_to_sheet([headers,...rows]);
+  ws['!cols']=[{wch:10},{wch:13},{wch:18},{wch:20},{wch:14},{wch:16},{wch:12},{wch:12},{wch:14},{wch:16},{wch:10},{wch:14},{wch:18},{wch:16},{wch:18},{wch:18},{wch:18},{wch:18},{wch:18}];
+  XLSX.utils.book_append_sheet(wb,ws,'Gold Loans');
+}
+function buildHandSheet(wb){
+  const headers=['Bill No','Loan Date','Customer Name','Phone Number','Loan Amount (₹)','Interest Rate (%/month)','Status','Repay Date','Interest Received (₹)','Cash Given (₹)','SG Phone Pay Given (₹)','EG Phone Pay Given (₹)','Cash Received Back (₹)','SG Phone Received (₹)','EG Phone Received (₹)'];
+  const rows=gl('hand').map(x=>[x.bill,toDMY(x.date),x.cust,x.phone,x.loan,x.rate,x.stat,toDMY(x.repay)||'',x.ir||0,x.cg||0,x.sg||0,x.eg||0,x.rc||0,x.rs||0,x.re||0]);
+  const ws=XLSX.utils.aoa_to_sheet([headers,...rows]);
+  ws['!cols']=[{wch:10},{wch:13},{wch:18},{wch:14},{wch:14},{wch:16},{wch:10},{wch:14},{wch:18},{wch:14},{wch:18},{wch:18},{wch:16},{wch:18},{wch:18}];
+  XLSX.utils.book_append_sheet(wb,ws,'Hand Loans');
+}
+function buildInvSheet(wb){
+  const headers=['Date','Partner Name','Amount (₹)','Status','Cash Received (₹)','SG Phone Received (₹)','EG Phone Received (₹)','Comments'];
+  const rows=gl('inv').map(x=>[toDMY(x.date),x.part,x.amt,x.stat,x.ci||0,x.si||0,x.ei||0,x.cmt||'']);
+  const ws=XLSX.utils.aoa_to_sheet([headers,...rows]);
+  ws['!cols']=[{wch:13},{wch:18},{wch:14},{wch:10},{wch:16},{wch:18},{wch:18},{wch:24}];
+  XLSX.utils.book_append_sheet(wb,ws,'Investments');
+}
+function buildExpSheet(wb){
+  const headers=['Date','Expense Name','Amount (₹)','Cash Paid (₹)','SG Phone Paid (₹)','EG Phone Paid (₹)','Comments'];
+  const rows=gl('exp').map(x=>[toDMY(x.date),x.name,x.amt,x.co||0,x.so||0,x.eo||0,x.cmt||'']);
+  const ws=XLSX.utils.aoa_to_sheet([headers,...rows]);
+  ws['!cols']=[{wch:13},{wch:22},{wch:14},{wch:14},{wch:16},{wch:16},{wch:24}];
+  XLSX.utils.book_append_sheet(wb,ws,'Expenses');
+}
+
+function exportLedger(){
+  const from=v('lf'),to=v('lt');
+  if(!from||!to)return toast('Select a date range first','err');
+  const txns=allTxns().filter(t=>t.date>=from&&t.date<=to);
+  const headers=['Date','Direction','Type','Description','Total (₹)','Cash (₹)','SG Phone (₹)','EG Phone (₹)'];
+  const rows=txns.map(t=>[toDMY(t.date),t.dir==='in'?'IN':'OUT',t.type,t.desc,t.dir==='in'?+Math.abs(t.total):-Math.abs(t.total),t.cash,t.sg,t.eg]);
+  const wb=XLSX.utils.book_new();
+  const ws=XLSX.utils.aoa_to_sheet([headers,...rows]);
+  ws['!cols']=[{wch:13},{wch:8},{wch:18},{wch:24},{wch:14},{wch:12},{wch:14},{wch:14}];
+  XLSX.utils.book_append_sheet(wb,ws,'Ledger');
+  XLSX.writeFile(wb,`MFinance_Ledger_${from}_to_${to}.xlsx`);
+  toast('✅ Ledger exported!','ok');
+}
+
+// ── SETTINGS ──
+function initDates(){
+  const t=todayISO();
+  const d=new Date();d.setDate(1);const f=d.toISOString().split('T')[0];
+  $('bulkDate').value=t;$('lf').value=f;$('lt').value=t;$('af').value=f;$('at').value=t;
+}
+function loadSettings(){
+  $('cfgUrl').value=CFG.url||'';$('cfgKey').value=CFG.key||'';
+  $('obC').value=CFG.obC||0;$('obS').value=CFG.obS||0;$('obE').value=CFG.obE||0;
+  $('obD').value=CFG.obD||todayISO();
+  $('sqlBox').textContent=`-- Mani Finance — Supabase Setup
+-- Run once in Supabase SQL Editor
+
+create table if not exists gold_loans (
+  id bigserial primary key, bill text, date date,
+  cust text, addr text, phone text, items text,
+  gw numeric default 0, nw numeric default 0,
+  loan numeric default 0, rate numeric default 1.5,
+  stat text default 'Open',
+  cg numeric default 0, sg numeric default 0, eg numeric default 0,
+  rel date, ir numeric default 0,
+  rc numeric default 0, rs numeric default 0, re numeric default 0,
+  created_at timestamptz default now()
+);
+create table if not exists hand_loans (
+  id bigserial primary key, bill text, date date,
+  cust text, phone text, loan numeric default 0,
+  rate numeric default 1.5, stat text default 'Open',
+  repay date, ir numeric default 0,
+  cg numeric default 0, sg numeric default 0, eg numeric default 0,
+  rc numeric default 0, rs numeric default 0, re numeric default 0,
+  created_at timestamptz default now()
+);
+create table if not exists investments (
+  id bigserial primary key, date date, part text,
+  amt numeric default 0, stat text default 'Open', cmt text,
+  ci numeric default 0, si numeric default 0, ei numeric default 0,
+  created_at timestamptz default now()
+);
+create table if not exists expenses (
+  id bigserial primary key, date date, name text,
+  amt numeric default 0, cmt text,
+  co numeric default 0, so numeric default 0, eo numeric default 0,
+  created_at timestamptz default now()
+);
+alter table gold_loans enable row level security;
+alter table hand_loans enable row level security;
+alter table investments enable row level security;
+alter table expenses enable row level security;
+create policy "allow_all" on gold_loans for all using (true) with check (true);
+create policy "allow_all" on hand_loans for all using (true) with check (true);
+create policy "allow_all" on investments for all using (true) with check (true);
+create policy "allow_all" on expenses for all using (true) with check (true);`;
+}
+async function saveConfig(){
+  CFG.url=v('cfgUrl').trim().replace(/\/$/,'');CFG.key=v('cfgKey').trim();
+  localStorage.setItem('fs_cfg',JSON.stringify(CFG));
+  const st=$('cfgSt');st.textContent='Testing…';st.style.color='var(--txt3)';
+  if(CFG.url&&CFG.key){
+    try{
+      const r=await fetch(`${CFG.url}/rest/v1/gold_loans?limit=1`,{headers:{'apikey':CFG.key,'Authorization':'Bearer '+CFG.key}});
+      if(r.ok){st.textContent='✅ Connected! Data syncs to Supabase.';st.style.color='var(--g2)';}
+      else{st.textContent='❌ Failed — check URL/key and run the SQL script first.';st.style.color='var(--r1)';}
+    }catch(e){st.textContent='⚠️ Network error.';st.style.color='var(--y1)';}
+  }else{st.textContent='Saved locally. Add URL & Key to enable Supabase.';st.style.color='var(--txt3)';}
+}
+function saveOB(){CFG.obC=n('obC');CFG.obS=n('obS');CFG.obE=n('obE');CFG.obD=v('obD');localStorage.setItem('fs_cfg',JSON.stringify(CFG));renderDB();toast('Opening balances saved!','ok');}
+function savePW(){const p1=v('pw1').trim(),p2=v('pw2').trim();if(p1)CFG.pw1=p1;if(p2)CFG.pw2=p2;localStorage.setItem('fs_cfg',JSON.stringify(CFG));$('pw1').value='';$('pw2').value='';toast('Passwords updated!','ok');}
+function copySql(){navigator.clipboard.writeText($('sqlBox').textContent).then(()=>toast('SQL copied!','ok')).catch(()=>toast('Select text manually','err'));}
+// Auto-restore session on page load
+checkSession();
+</script>
+</body>
+</html>
