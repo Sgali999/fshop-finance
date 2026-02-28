@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>FShop Finance Manager</title>
+<title>Mani Finance</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Serif:wght@600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
@@ -291,7 +291,7 @@ tbody tr:hover td{background:var(--gp);}
   <div class="lc">
     <div class="lc-brand">
       <div class="lc-icon">⚜</div>
-      <h1>FShop Finance</h1>
+      <h1>Mani Finance</h1>
       <p>Management System</p>
     </div>
     <label class="lbl">Username</label>
@@ -306,14 +306,14 @@ tbody tr:hover td{background:var(--gp);}
 <!-- ═══ APP ═══ -->
 <div id="app">
   <div class="mob-hdr">
-    <div class="mob-brand"><div class="mob-bi">⚜</div>FShop Finance</div>
+    <div class="mob-brand"><div class="mob-bi">⚜</div>Mani Finance</div>
     <span style="font-size:10px;color:rgba(255,255,255,.55)" id="mobU"></span>
   </div>
   <div class="aw">
     <!-- SIDEBAR -->
     <div class="sb">
       <div class="sb-top">
-        <div class="sb-brand"><div class="sb-bi">⚜</div><div class="sb-bt"><h2>FShop</h2><p>Finance Mgr</p></div></div>
+        <div class="sb-brand"><div class="sb-bi">⚜</div><div class="sb-bt"><h2>MFinance</h2><p>Finance Mgr</p></div></div>
       </div>
       <div class="sb-usr">
         <div class="sb-av" id="sbAv">A</div>
@@ -468,7 +468,7 @@ tbody tr:hover td{background:var(--gp);}
           <div class="imp-zone" id="dropZone" onclick="document.getElementById('fileInp').click()" ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')" ondrop="handleDrop(event)">
             <div style="font-size:36px;margin-bottom:9px">📂</div>
             <h3>Click to browse or drag & drop your Excel file</h3>
-            <p>.xlsx files only · FShop Import Template format</p>
+            <p>.xlsx files only · MFinance Import Template format</p>
           </div>
           <input type="file" id="fileInp" accept=".xlsx" style="display:none" onchange="handleFile(this.files[0])">
           <div id="impResult" style="display:none;margin-top:12px;background:var(--gp);border:1px solid var(--bdr);border-radius:8px;padding:13px;"></div>
@@ -1132,7 +1132,7 @@ function handleFile(file){
           <div>🧾 Expenses: <strong>${imported.exp}</strong></div>
         </div>`;
       renderAll();toast(`✅ ${total} records imported!`,'ok');
-    }catch(err){toast('Error reading file. Make sure it is the FShop Import Template.','err');console.error(err);}
+    }catch(err){toast('Error reading file. Make sure it is the MFinance Import Template.','err');console.error(err);}
   };
   reader.readAsArrayBuffer(file);
 }
@@ -1151,7 +1151,7 @@ function exportAll(){
   const wb=XLSX.utils.book_new();
   buildGoldSheet(wb);buildHandSheet(wb);buildInvSheet(wb);buildExpSheet(wb);
   const dt=new Date().toISOString().slice(0,10);
-  XLSX.writeFile(wb,`FShop_Backup_${dt}.xlsx`);
+  XLSX.writeFile(wb,`MFinance_Backup_${dt}.xlsx`);
   toast('✅ Full backup downloaded!','ok');
 }
 
@@ -1163,7 +1163,7 @@ function exportSheet(key){
   else if(key==='exp')buildExpSheet(wb);
   const dt=new Date().toISOString().slice(0,10);
   const names={gold:'Gold_Loans',hand:'Hand_Loans',inv:'Investments',exp:'Expenses'};
-  XLSX.writeFile(wb,`FShop_${names[key]}_${dt}.xlsx`);
+  XLSX.writeFile(wb,`MFinance_${names[key]}_${dt}.xlsx`);
   toast(`✅ ${names[key]} exported!`,'ok');
 }
 
@@ -1206,7 +1206,7 @@ function exportLedger(){
   const ws=XLSX.utils.aoa_to_sheet([headers,...rows]);
   ws['!cols']=[{wch:13},{wch:8},{wch:18},{wch:24},{wch:14},{wch:12},{wch:14},{wch:14}];
   XLSX.utils.book_append_sheet(wb,ws,'Ledger');
-  XLSX.writeFile(wb,`FShop_Ledger_${from}_to_${to}.xlsx`);
+  XLSX.writeFile(wb,`MFinance_Ledger_${from}_to_${to}.xlsx`);
   toast('✅ Ledger exported!','ok');
 }
 
@@ -1220,7 +1220,7 @@ function loadSettings(){
   $('cfgUrl').value=CFG.url||'';$('cfgKey').value=CFG.key||'';
   $('obC').value=CFG.obC||0;$('obS').value=CFG.obS||0;$('obE').value=CFG.obE||0;
   $('obD').value=CFG.obD||todayISO();
-  $('sqlBox').textContent=`-- FShop Finance Manager — Supabase Setup
+  $('sqlBox').textContent=`-- Mani Finance — Supabase Setup
 -- Run once in Supabase SQL Editor
 
 create table if not exists gold_loans (
