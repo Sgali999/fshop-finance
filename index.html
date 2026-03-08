@@ -1211,7 +1211,10 @@ function renderDB(){
   const gCI=ogc.reduce((a,b)=>a+(+b.ir||0),0);
   const hOI=oh.reduce((a,b)=>a+calcInt(b.loan,b.rate,b.date),0);
   const hCI=ohc.reduce((a,b)=>a+(+b.ir||0),0);
-  const totInt=gOI+hOI; // total earned interest on open loans till date
+  // Earned interest = interest actually received (closed loans) + partial received (open loans)
+  const gEarned=gl('gold').reduce((a,b)=>a+(+b.ir||0),0); // all gold ir received
+  const hEarned=gl('hand').reduce((a,b)=>a+(+b.ir||0),0); // all hand ir received
+  const totInt=gEarned+hEarned;
   const netAmt=totInv+totInt-totExp;
   $('ahero').innerHTML=`
     <div class="nb-hero">
@@ -1233,7 +1236,7 @@ function renderDB(){
     <div class="sc">
       <div class="sc-lbl">Earned Interest (till date)</div>
       <div class="sc-val gr">${INR(totInt)}</div>
-      <div class="sc-sub">Gold: ${INR(gOI)} &nbsp;|&nbsp; Hand: ${INR(hOI)}</div>
+      <div class="sc-sub">Gold: ${INR(gEarned)} &nbsp;|&nbsp; Hand: ${INR(hEarned)}</div>
     </div>
     <div class="sc">
       <div class="sc-lbl">Total Expenses</div>
